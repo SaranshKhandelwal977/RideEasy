@@ -88,3 +88,43 @@ This endpoint authenticates an existing user using email and password.
   }
 }
 ```
+
+## /users/profile Endpoint Documentation
+
+### Description
+This endpoint returns the profile details of the authenticated user.
+
+### Endpoint Details
+- **URL:** `/users/profile`
+- **Method:** GET
+
+### Authentication
+Requires a valid JWT token via cookie or Authorization header.
+
+### Response Example
+```json
+{
+  "id": "user_id",
+  "email": "user@example.com",
+  // ...other profile fields...
+}
+```
+
+## /users/logout Endpoint Documentation
+
+### Description
+This endpoint logs out the authenticated user by clearing the token cookie and blacklisting the current token.
+
+### Endpoint Details
+- **URL:** `/users/logout`
+- **Method:** GET
+
+### Authentication
+Requires a valid JWT token.
+
+### Response Example
+```json
+{
+  "message": "Logged out successfully"
+}
+```
