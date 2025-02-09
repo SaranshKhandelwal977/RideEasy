@@ -128,3 +128,143 @@ Requires a valid JWT token.
   "message": "Logged out successfully"
 }
 ```
+
+## Captain Routes Documentation
+
+### /captains/register Endpoint Documentation
+
+#### Description
+This endpoint registers a new captain. All fields in the request must be provided, including fullname and vehicle details.
+
+#### Endpoint Details
+- **URL:** `/captains/register`
+- **Method:** POST
+
+#### Request Data
+- **email:** Must be a valid email address.
+- **password:** Must be at least 6 characters long.
+- **fullname:** An object containing:
+  - **firstname:** Required, minimum 3 characters.
+  - **lastname:** Optional.
+- **vehicle:** An object containing:
+  - **color:** Required, minimum 3 characters.
+  - **plate:** Required, minimum 1 character.
+  - **capacity:** Required.
+  - **vehicleType:** Must be one of: `car`, `motorcycle`, `auto`.
+
+#### Sample Request Body
+```json
+{
+  "fullname": {
+    "firstname": "Captain",
+    "lastname": "America"
+  },
+  "email": "captain@example.com",
+  "password": "securePass123",
+  "vehicle": {
+    "color": "red",
+    "plate": "XYZ123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+#### Status Codes
+- **201 Created:** When the captain is successfully registered.
+- **400 Bad Request:** When validation fails or captain already exists.
+
+#### Response Example
+```json
+{
+  "token": "jwt_token_string",
+  "captain": {
+    "fullname": {
+      "firstname": "Captain",
+      "lastname": "America"
+    },
+    "email": "captain@example.com",
+    // ...other captain fields...
+  }
+}
+```
+
+## /captains/login Endpoint Documentation
+
+### Description
+This endpoint authenticates an existing captain using email and password.
+
+### Endpoint Details
+- **URL:** `/captains/login`
+- **Method:** POST
+
+### Request Data
+- **email:** Must be a valid email address.
+- **password:** Must be at least 6 characters long.
+
+### Sample Request Body
+```json
+{
+  "email": "captain@example.com",
+  "password": "securePass123"
+}
+```
+
+### Status Codes
+- **200 OK:** When authentication is successful.
+- **400 Bad Request:** When validation fails.
+- **401 Unauthorized:** When the email or password is incorrect.
+
+### Response Example
+```json
+{
+  "token": "jwt_token_string",
+  "captain": {
+    "fullname": {
+      "firstname": "Captain",
+      "lastname": "America"
+    },
+    "email": "captain@example.com"
+  }
+}
+```
+
+## /captains/profile Endpoint Documentation
+
+### Description
+This endpoint returns the profile details of the authenticated captain.
+
+### Endpoint Details
+- **URL:** `/captains/profile`
+- **Method:** GET
+
+### Authentication
+Requires a valid JWT token provided via cookie or Authorization header.
+
+### Response Example
+```json
+{
+  "id": "captain_id",
+  "email": "captain@example.com",
+  // ...other profile fields...
+}
+```
+
+## /captains/logout Endpoint Documentation
+
+### Description
+This endpoint logs out the authenticated captain by clearing the token cookie and blacklisting the active token.
+
+### Endpoint Details
+- **URL:** `/captains/logout`
+- **Method:** GET
+
+### Authentication
+Requires a valid JWT token.
+
+### Response Example
+```json
+{
+  "message": "Logged out successfully"
+}
+```
