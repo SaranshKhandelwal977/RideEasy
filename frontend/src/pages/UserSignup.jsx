@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios';
+import {UserDataContext} from '../context/userContext';
+ 
 const UserSignup = () => {
     const [ email, setEmail ] = useState('')
     const [ password, setPassword ] = useState('')
@@ -8,19 +10,29 @@ const UserSignup = () => {
     const [ lastName, setLastName ] = useState('')
     const [ userData, setUserData ] = useState({})
 
+    const {user, setUser} = useContext(UserDataContext);
+
+    const navigate = useNavigate();
+
     const submitHandler = async (e) => {
         e.preventDefault()
-        setUserData(
-            {
-              fullname: {
+        const newUser = {
+            fullname: {
                 firstname: firstName,
                 lastname: lastName
-              },
-              email: email,
-              password: password
-            }
-        ) 
-        console.log(userData)
+            },
+            email: email,
+            password: password
+        } 
+
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser);
+        if(response.status === 201){
+            const data = response.data;
+            setUser(data.user);
+            localStorage.setItem('token', data.token);
+            navigate('/home');
+        }
+
         setEmail('')
         setFirstName('')
         setLastName('')
@@ -40,7 +52,7 @@ const UserSignup = () => {
                 <div className='flex gap-4 mb-7'>
                     <input
                     required
-                    className='bg-[#eeeeee] w-1/2 rounded-lg px-4 py-2 border  text-lg placeholder:text-base'
+                    className='bg-gray-700 w-1/2 rounded-lg px-4 py-2 border  text-lg placeholder:text-base'
                     type="text"
                     placeholder='First name'
                     value={firstName}
@@ -50,7 +62,7 @@ const UserSignup = () => {
                     />
                     <input
                     required
-                    className='bg-[#eeeeee] w-1/2  rounded-lg px-4 py-2 border  text-lg placeholder:text-base'
+                    className='bg-gray-700 w-1/2  rounded-lg px-4 py-2 border  text-lg placeholder:text-base'
                     type="text"
                     placeholder='Last name'
                     value={lastName}
@@ -67,7 +79,7 @@ const UserSignup = () => {
                     onChange={(e) => {
                     setEmail(e.target.value)
                     }}
-                    className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
+                    className='bg-gray-700 mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
                     type="email"
                     placeholder='email@example.com'
                 />
@@ -75,7 +87,7 @@ const UserSignup = () => {
                 <h3 className='text-lg font-medium mb-2'>Enter Password</h3>
 
                 <input
-                    className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
+                    className='bg-gray-700 mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
                     value={password}
                     onChange={(e) => {
                     setPassword(e.target.value)
