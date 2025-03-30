@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router-dom';
 const Riding = () => {
     const navigate = useNavigate();
   return (
-    <div className='h-screen'>
-        <div onClick={() => {navigate('/home')}} className='fixed cursor-pointer bg-white h-10 w-10 flex items-center justify-center rounded-full shadow-md mt-4 ml-3'>
+    <div className='h-screen relative'>
+        <h2 className='w-16 absolute left-5 top-5 text-2xl tracking-tighter font-bold text-black'>RideEasy</h2>
+        <div onClick={() => {navigate('/home')}} className='absolute cursor-pointer bg-white h-10 w-10 flex items-center justify-center rounded-full shadow-md top-5 right-5'>
             <i className="text-lg text-black font-bold ri-home-5-line"></i>
         </div>
         <div className='h-1/2'>

@@ -110,7 +110,7 @@ const Home = () => {
   return (
     <div className='h-screen relative overflow-hidden'>
         <h2 className='w-16 absolute left-5 top-5 text-2xl tracking-tighter font-bold text-black'>RideEasy</h2>
-        <div className='h-screen w-screen'>
+        <div className='h-4/5'>
             <img className='w-full h-full object-cover' src='https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif'/>
         </div>
         <div className='absolute flex flex-col justify-end h-screen top-0 w-full'>
