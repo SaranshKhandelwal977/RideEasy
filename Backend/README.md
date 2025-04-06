@@ -268,3 +268,88 @@ Requires a valid JWT token.
   "message": "Logged out successfully"
 }
 ```
+
+## Ride Endpoints
+
+### /rides/create
+**Description:** Creates a new ride request.  
+**URL:** `/rides/create`  
+**Method:** POST  
+**Authentication:** Requires JWT token.  
+**Request Body:**
+```json
+{
+  "pickup": "Location A",
+  "destination": "Location B",
+  "vehicleType": "car"
+  // Valid values: "car", "motorcycle", or "auto"
+}
+```
+**Status Codes:**
+- 201 Created: Ride created.
+- 400 Bad Request: Validation error.
+- 500 Internal Server Error: On failure.
+**Response Example:**
+```json
+{
+  "ride": {
+    "_id": "ride_id",
+    "user": "user_id",
+    "pickup": "Location A",
+    "destination": "Location B",
+    "fare": 35,
+    "status": "pending"
+    // ...other ride fields...
+  }
+}
+```
+
+## Maps Endpoints
+
+### /maps/get-coordinates
+**Description:** Retrieves coordinates for a specified address.  
+**URL:** `/maps/get-coordinates`  
+**Method:** GET  
+**Authentication:** Requires JWT token.  
+**Query Parameter:**
+- address: string
+**Response Example:**
+```json
+{
+  "ltd": 40.7128,
+  "lng": -74.0060
+}
+```
+
+### /maps/get-distance-time
+**Description:** Retrieves distance and duration between two locations.  
+**URL:** `/maps/get-distance-time`  
+**Method:** GET  
+**Authentication:** Requires JWT token.  
+**Query Parameters:**
+- origin: string
+- destination: string
+**Response Example:**
+```json
+{
+  "distance": { "value": 5000 },
+  "duration": { "value": 600 }
+}
+```
+
+### /maps/get-suggestions
+**Description:** Retrieves auto-complete suggestions for a given input.  
+**URL:** `/maps/get-suggestions`  
+**Method:** GET  
+**Authentication:** Requires JWT token.  
+**Query Parameter:**
+- input: string
+**Response Example:**
+```json
+[
+  {
+    "description": "New York, NY, USA"
+    // ...other suggestion fields...
+  }
+]
+```
