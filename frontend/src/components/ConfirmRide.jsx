@@ -1,5 +1,7 @@
 import React from 'react'
 import carImage from "../assets/carr.png";
+import bikeImage from "../assets/bike.png";
+import autoImage from "../assets/auto.png";
 
 const ConfirmRide = (props) => {
   return (
@@ -9,33 +11,32 @@ const ConfirmRide = (props) => {
         </h5>
         <h3 className='text-2xl font-semibold mb-5'>Confirm your Ride</h3>
         <div className='flex gap-2 justify-between flex-col items-center'> 
-            <img className='h-20' src={carImage}/>
+        <img className='h-20' src={ props.vehicleType === 'car' ? carImage : props.vehicleType === 'motorcycle' ? bikeImage : autoImage}/>
             <div className='w-full mt-5'>
                 <div className='flex items-center gap-5 p-3 border-b-2 border-gray-400'>
                     <i className="text-lg  ri-map-pin-2-fill"></i>
                     <div>
-                        <h3 className='text-lg font-medium'>562/11A</h3>
-                        <p className='text-sm -mt-1 text-gray-600'>Address line 2</p>
+                        <h3 className='text-md font-normal'>{props.pickup}</h3>
+                        
                     </div>
                 </div>
                 <div className='flex items-center gap-5 p-3 border-b-2 border-gray-400'>
-                    <i className="text-lg ri-map-pin-user-fill"></i>
+                    <i className="text-md ri-map-pin-user-fill"></i>
                     <div>
-                        <h3 className='text-lg font-medium'>562/11A</h3>
-                        <p className='text-sm -mt-1 text-gray-600'>Address line 2</p>
+                        <h3 className='text-md font-normal'>{props.destination}</h3>
                     </div>
                 </div>
                 <div className='flex items-center gap-5 p-3'>
                     <i className="text-lg ri-currency-line"></i>
                     <div>
-                        <h3 className='text-lg font-medium'>Rs. 193.20</h3>
-                        <p className='text-sm -mt-1 text-gray-600'>Currency option</p>
+                        <h3 className='text-md font-normal'>₹{props.fare[ props.vehicleType ]}</h3>
                     </div>
                 </div>
             </div>
             <button onClick={() => {
                 props.setVehicleFound(true)
                 props.setConfirmRidePanel(false)
+                props.createRide()
             }} className='w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg '>Confirm</button>
         </div>
     </div>
