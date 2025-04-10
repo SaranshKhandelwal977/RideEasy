@@ -6,9 +6,9 @@ module.exports.createRide = async (req, res) => {
     if(!errors.isEmpty()) {
         return res.status(400).json({errors: errors.array()});
     }
-    const {pickup, destination, vehicleType} = req.body;
+    const {pickup, destination, vehicleType, isEV  = false} = req.body;
     try{
-        const ride = await rideService.createRide({user:req.user._id , pickup, destination, vehicleType});
+        const ride = await rideService.createRide({user:req.user._id , pickup, destination, vehicleType, isEV });
         return res.status(201).json({ride});
     }catch(error){
         return res.status(500).json({message: error.message});
@@ -20,9 +20,9 @@ module.exports.getFare = async (req, res) => {
     if(!errors.isEmpty()) {
         return res.status(400).json({errors: errors.array()});
     }
-    const {pickup, destination} = req.query;
+    const {pickup, destination, isEV  = false} = req.query;
     try{
-        const fare = await rideService.getFare(pickup, destination);
+        const fare = await rideService.getFare(pickup, destination, isEV  === 'true');
         return res.status(200).json(fare);
     }catch(error){
         return res.status(500).json({message: error.message});

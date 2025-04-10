@@ -40,7 +40,7 @@ const Home = () => {
     const [destinationQuery, setDestinationQuery] = useState('');
     const [finalPickup, setFinalPickup] = useState('');
     const [finalDestination, setFinalDestination] = useState('');
-
+    const [isEV, setIsEV] = useState(false);
 
     const submithandler = (e) => {
         e.preventDefault();
@@ -169,36 +169,48 @@ const Home = () => {
         }
     },[waitingForDriver])
 
+    const fetchFare = async (pickup, destination, isEV) => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
+                params: { pickup, destination, isEV },
+                headers: {
+                    Authorization: `bearer ${localStorage.getItem('token')}`
+                }
+            });
+            setFare(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+      
     async function findTrip() {
-        setVehiclePanel(true)
-        setPanelOpen(false)
+        setVehiclePanel(true);
+        setPanelOpen(false);
         setFinalPickup(pickup);
         setFinalDestination(destination);
-
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
-            params: { pickup, destination },
-            headers: {
-                Authorization: `bearer ${localStorage.getItem('token')}`
-            }
-        })
-        setFare(response.data)
-        setPickup('')
-        setDestination('')
-        setPickupSuggestions([])
-        setDestinationSuggestions([])
+        
+        await fetchFare(pickup, destination, isEV); // include isEV
+        setPickup('');
+        setDestination('');
+        setPickupSuggestions([]);
+        setDestinationSuggestions([]);
     }
+   
 
     async function createRide() {
         const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`, {
-            pickup,
-            destination,
-            vehicleType
+            pickup: finalPickup,
+            destination: finalDestination,
+            vehicleType,
+            isEV
         }, {
             headers: {
                 Authorization: `bearer ${localStorage.getItem('token')}`
             }
         })
+        console.log(response);
         setVehiclePanel(false)
+        setIsEV(false);
     }
 
   return (
@@ -267,6 +279,11 @@ const Home = () => {
                 fare={fare} 
                 setConfirmRidePanel={setConfirmRidePanel} 
                 setVehiclePanel={setVehiclePanel}
+                isEV={isEV}
+                setIsEV={setIsEV}
+                fetchFare={fetchFare}
+                pickup={finalPickup}
+                destination={finalDestination}
             />
         </div>
 
@@ -279,6 +296,7 @@ const Home = () => {
                 vehicleType={vehicleType}
                 setConfirmRidePanel={setConfirmRidePanel} 
                 setVehicleFound={setVehicleFound}
+                isEV={isEV}
             />
         </div>
 

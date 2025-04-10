@@ -4,12 +4,29 @@ import bikeImage from "../assets/bike.png";
 import autoImage from "../assets/auto.png";
 
 const VehiclePanel = (props) => {
+    const handleIsEVToggle = (e) => {
+        props.setIsEV(e.target.checked)
+        console.log(e.target.checked)
+        console.log(props.fare);
+        props.fetchFare(props.pickup, props.destination, e.target.checked);
+        
+    }
   return (
     <div className='px-2'>
         <h5 className='p-1 text-center w-[93%] absolute top-0 ' onClick={() => {props.setVehiclePanel(false)}}>
             <i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i>
         </h5>
         <h3 className='text-2xl font-semibold mb-5'>Choose a vehicle</h3>
+        <div className="flex items-center justify-between mb-5 px-2">
+            <label htmlFor="ev-switch" className="text-white text-sm font-medium">EV Mode</label>
+            <input
+                id="ev-switch"
+                type="checkbox"
+                className="toggle toggle-sm"
+                checked={props.isEV}
+                onChange={(e) => handleIsEVToggle(e)}
+            />
+        </div>
         <div className='flex flex-col gap-2'>
             <div onClick={() => {
                 props.setConfirmRidePanel(true)

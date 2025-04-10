@@ -3,7 +3,7 @@ const mapsService = require('./maps.service');
 const crypto = require('crypto');
 
 
-async function getFare(pickup, destination) {
+async function getFare(pickup, destination, isEV = false) {
     if(!pickup || !destination) {
         throw new Error('Pickup and destination are required');
     }
@@ -23,10 +23,11 @@ async function getFare(pickup, destination) {
         car: 2.5,
         motorcycle: 1
     }
+    const evDiscount = 0.85;
     const fare = {
-        auto: Math.round(baseFare.auto + ((distanceTime.distance.value / 1000) * perKmRate.auto) + ((distanceTime.duration.value / 60) * perMinuteRate.auto)),
-        car: Math.round(baseFare.car + ((distanceTime.distance.value / 1000) * perKmRate.car) + ((distanceTime.duration.value / 60) * perMinuteRate.car)),
-        motorcycle: Math.round(baseFare.motorcycle + ((distanceTime.distance.value / 1000) * perKmRate.motorcycle) + ((distanceTime.duration.value / 60) * perMinuteRate.motorcycle))
+        auto: Math.round(baseFare.auto + ((distanceTime.distance.value / 1000) * perKmRate.auto) + ((distanceTime.duration.value / 60) * perMinuteRate.auto) * (isEV ? evDiscount : 1)) ,
+        car: Math.round(baseFare.car + ((distanceTime.distance.value / 1000) * perKmRate.car) + ((distanceTime.duration.value / 60) * perMinuteRate.car) * (isEV ? evDiscount : 1)) ,
+        motorcycle: Math.round(baseFare.motorcycle + ((distanceTime.distance.value / 1000) * perKmRate.motorcycle) + ((distanceTime.duration.value / 60) * perMinuteRate.motorcycle) * (isEV ? evDiscount : 1)) 
        
     }
     return fare;
@@ -39,11 +40,11 @@ async function getOtp(num){
     return otp;
 }
 
-module.exports.createRide = async ({user, pickup, destination, vehicleType}) => {
+module.exports.createRide = async ({user, pickup, destination, vehicleType, isEV = false}) => {
     if(!user || !pickup || !destination || !vehicleType) {
         throw new Error('UserId, pickup, destination and vehicleType are required');
     }
-    const fare = await getFare(pickup, destination);
+    const fare = await getFare(pickup, destination, isEV);
     const ride = await rideModel.create({
         user: user,
         pickup,

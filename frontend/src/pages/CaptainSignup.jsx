@@ -15,6 +15,7 @@ const CaptainSignup = () => {
     const [ vehiclePlate, setVehiclePlate ] = useState('')
     const [ vehicleCapacity, setVehicleCapacity ] = useState('')
     const [ vehicleType, setVehicleType ] = useState('')
+    const [isEV, setIsEV] = useState(false);
 
     const {captain, setCaptain} = useContext(CaptainDataContext);
     const navigate = useNavigate();
@@ -33,7 +34,8 @@ const CaptainSignup = () => {
                 color: vehicleColor,
                 plate: vehiclePlate,
                 capacity: vehicleCapacity,
-                vehicleType: vehicleType
+                vehicleType: vehicleType,
+                evMode: isEV
             }
         }
         const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`, newCaptain);
@@ -51,6 +53,7 @@ const CaptainSignup = () => {
         setVehiclePlate('')
         setVehicleCapacity('')
         setVehicleType('')
+        setIsEV(false);
     }
 
   return (
@@ -157,6 +160,19 @@ const CaptainSignup = () => {
               <option value="auto">Auto</option>
               <option value="moto">Moto</option>
             </select>
+          </div>
+
+          <div className='flex items-center gap-3 mb-7'>
+            <input
+              id="ev-toggle"
+              type="checkbox"
+              checked={isEV}
+              onChange={() => setIsEV(!isEV)}
+              className="accent-green-600 h-5 w-5"
+            />
+            <label htmlFor="ev-toggle" className='text-lg font-medium'>
+              Is this an Electric Vehicle (EV)?
+            </label>
           </div>
 
           <button

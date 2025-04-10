@@ -30,7 +30,7 @@ const LookingForDriver = (props) => {
                 <div className='flex items-center gap-5 p-3'>
                     <i className="text-lg ri-currency-line"></i>
                     <div>
-                        <h3 className='text-md font-normal'>{props.fare[props.vehicleType]}</h3>
+                        <h3 className='text-md font-normal'>₹{props.fare[props.vehicleType]}</h3>
                     </div>
                 </div>
             </div>
