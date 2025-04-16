@@ -45,6 +45,7 @@ const Home = () => {
     const [finalPickup, setFinalPickup] = useState('');
     const [finalDestination, setFinalDestination] = useState('');
     const [isEV, setIsEV] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const {socket} = useContext(SocketContext);
     const {user} = useContext(UserDataContext);
@@ -240,9 +241,14 @@ const Home = () => {
     }
 
   return (
-    <div className='h-screen relative overflow-y-hidden'>
-        <h2 className='w-16 absolute left-5 top-5 text-2xl tracking-tighter font-bold text-black'>RideEasy</h2>
-        <div className='h-[70%] w-[375px]'>
+    <div className='h-screen relative w-full mx-auto overflow-y-hidden'>
+        <h2 className='w-16 absolute left-5 top-5 text-2xl tracking-tighter font-bold text-white'>RideEasy</h2>
+        <div className="absolute top-5 right-5 z-50">
+            <button onClick={() => setIsSidebarOpen(true)} className="absolute cursor-pointer bg-white h-10 w-10 flex items-center justify-center rounded-full shadow-md top-5 right-5">
+                <i className="text-lg text-black font-bold ri-menu-line"></i>
+            </button>
+        </div>
+        <div className='h-[70%] pt-16'>
             <LiveTracking/>
         </div>
         <div className='absolute flex flex-col justify-end h-screen top-0 w-full'>
@@ -299,7 +305,7 @@ const Home = () => {
                 />
             </div>
         </div>
-        <div ref={vehiclePanelRef} className='fixed w-[375px] z-10 bottom-0 bg-gray-800 px-3 py-10 pt-12 transform translate-y-full'>
+        <div ref={vehiclePanelRef} className='fixed w-[550px] z-10 bottom-0 bg-gray-800 px-3 py-10 pt-12 transform translate-y-full'>
             <VehiclePanel  
                 selectVehicle={setVehicleType} 
                 fare={fare} 
@@ -313,7 +319,7 @@ const Home = () => {
             />
         </div>
 
-        <div ref={confirmRidePanelRef} className='fixed w-[375px] z-10 bottom-0 bg-gray-800 px-3 py-6 pt-12 transform translate-y-full'>
+        <div ref={confirmRidePanelRef} className='fixed w-[550px] z-10 bottom-0 bg-gray-800 px-3 py-6 pt-12 transform translate-y-full'>
             <ConfirmRide 
                 createRide={createRide}
                 pickup={finalPickup}
@@ -326,7 +332,7 @@ const Home = () => {
             />
         </div>
 
-        <div ref={vehicleFoundRef} className='fixed w-[375px] z-10 bottom-0 bg-gray-800 px-3 py-6 pt-12 transform translate-y-full'>
+        <div ref={vehicleFoundRef} className='fixed w-[550px] z-10 bottom-0 bg-gray-800 px-3 py-6 pt-12 transform translate-y-full'>
             <LookingForDriver 
                 createRide={createRide}
                 pickup={finalPickup}
@@ -338,7 +344,7 @@ const Home = () => {
             />
         </div>
 
-        <div ref={waitingForDriverRef} className='fixed w-[375px] z-10 bottom-0 bg-gray-800 px-3 py-6 pt-12 transform translate-y-full'>
+        <div ref={waitingForDriverRef} className='fixed w-[550px] z-10 bottom-0 bg-gray-800 px-3 py-6 pt-12 transform translate-y-full'>
             <WaitForDriver 
                 setWaitingForDriver={setWaitingForDriver} 
                 ride={ride}

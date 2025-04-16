@@ -7,21 +7,28 @@ import { useNavigate } from 'react-router-dom'
 const ConfirmRidePopUp = (props) => {
     
     const [otp, setOtp] = useState('')
+    const [error, setError] = useState('');
     const navigate = useNavigate()
     const submitHandler = async (e) => {
         e.preventDefault();
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/start-ride`, {
-            params: {rideId: props.ride._id,
-            otp: otp},
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
+        try{
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/start-ride`, {
+                params: {rideId: props.ride._id,
+                otp: otp},
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+    
+            })
+            if(response.status === 200){
+                props.setConfirmRidePopupPanel(false)
+                props.setRidePopupPanel(false)
+                navigate('/captain-riding', {state: {ride: props.ride}})
             }
-
-        })
-        if(response.status === 200){
-            props.setConfirmRidePopupPanel(false)
-            props.setRidePopupPanel(false)
-            navigate('/captain-riding', {state: {ride: props.ride}})
+        }
+        catch(err){
+            setOtp(''); // clear OTP input
+            setError('Wrong OTP entered. Please try again.');
         }
         
 
@@ -63,7 +70,17 @@ const ConfirmRidePopUp = (props) => {
             </div>
             <div className='mt-6 w-full'>
                 <form onSubmit={submitHandler}>
-                    <input onChange={(e) => setOtp(e.target.value)} value={otp} type='text' placeholder='Enter OTP' className='p-2 px-5 w-full border-2 border-gray-400 rounded-lg'/>
+                    <input 
+                        onChange={(e) => {
+                            setOtp(e.target.value)
+                            setError('');
+                        }} 
+                        value={otp} 
+                        type='text' 
+                        placeholder='Enter OTP' 
+                        className='p-2 px-5 w-full border-2 border-gray-400 rounded-lg'
+                    />
+                    {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
                     <button className=' mt-5 w-full block text-center bg-green-600 text-white font-semibold p-2 px-5 rounded-lg '>Confirm</button>
                     <button onClick={() => {props.setConfirmRidePopupPanel(false)}} 
                     className=' mt-5 w-full bg-red-500 text-white font-semibold p-2 px-5 rounded-lg '>Cancel</button>

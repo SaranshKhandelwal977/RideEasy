@@ -48,7 +48,10 @@ const UserLogin = () => {
                         required
                         placeholder="email@example.com"
                         className="bg-gray-700 mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base"
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => {
+                            setEmail(e.target.value)
+                            setError('')
+                        }}
                     />
                     <h3 className="text-lg font-medium mb-2">What's your Password</h3>
                     <input
@@ -56,8 +59,11 @@ const UserLogin = () => {
                         value={password}
                         required
                         placeholder="password"
-                        className="bg-gray-700 mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base"
-                        onChange={(e) => setPassword(e.target.value)}
+                        className="bg-gray-700 mb-4 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base"
+                        onChange={(e) => {
+                            setPassword(e.target.value)
+                            setError('')
+                        }}
                     />
                     {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
                     <button className="bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg">

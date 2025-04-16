@@ -26,15 +26,15 @@ const CaptainRiding = () => {
     },[finishRidePanel])
 
   return (
-    <div className='h-screen relative flex flex-col justify-end'>
+    <div className='h-screen relative flex flex-col justify-end w-full mx-auto'>
         
-        <h2 className='w-16 absolute left-5 top-5 text-2xl tracking-tighter font-bold text-black'>RideEasy</h2>
+        <h2 className='w-16 absolute left-5 top-5 text-2xl tracking-tighter font-bold text-white'>RideEasy</h2>
         <div>
             <div onClick={() => {navigate('/captain-home')}} className='absolute cursor-pointer bg-white h-10 w-10 flex items-center justify-center rounded-full shadow-md top-5 right-5'>
                 <i className="text-lg text-black font-bold ri-home-5-line"></i>
             </div>
         </div>
-        <div className='h-1/2 w-[375px]'>
+        <div className='h-4/5 w- pt-16'>
             <LiveTracking/>
         </div>
         <div className='h-1/5 p-8 pb-0 flex items-center justify-between relative' onClick={() => setFinishRidePanel(true)}>
@@ -44,7 +44,7 @@ const CaptainRiding = () => {
             <h4 className='text-xl font-semibold'>4km away </h4>
             <button onClick={() => {}} className='bg-green-600 text-white font-semibold p-2 px-5 rounded-lg '>Complete Ride</button>
         </div>
-        <div ref={finishRidePanelRef} className='fixed w-[375px] h-screen z-10 bottom-0 bg-gray-800 px-3 py-10 pt-12 transform translate-y-full'>
+        <div ref={finishRidePanelRef} className='fixed w-[550px] h-screen z-10 bottom-0 bg-gray-800 px-3 py-10 pt-12 transform translate-y-full'>
             <FinishRide ride={rideData} setFinishRidePanel={setFinishRidePanel}/>
         </div>
     </div>

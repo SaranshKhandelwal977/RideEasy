@@ -16,27 +16,35 @@ const CaptainLogin = () => {
         e.preventDefault();
         setLoading(true);
         setError(null); // Reset error before request
-        
-        const captain = {
-            email: email,
-            password
-        }
+        try {
+            const captain = {
+                email,
+                password
+            };
     
-        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`, captain)
+            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`, captain);
     
-        if (response.status === 200) {
-            const data = response.data
-        
-            setCaptain(data.captain)
-            localStorage.setItem('token', data.token)
-            localStorage.setItem('captain', JSON.stringify(data.captain));
-
-            navigate('/captain-home')
-    
-        }
+            if (response.status === 200) {
+                const data = response.data;
+                setCaptain(data.captain);
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('captain', JSON.stringify(data.captain));
+                navigate('/captain-home');
+            }
+            setEmail('');
+            setPassword('');
+        } catch (err) {
+            console.error(err);
+            if (err.response && err.response.data.message) {
+                setError(err.response.data.message);
+            } else {
+                setError('Something went wrong. Please try again.');
+            }
+        } 
         setEmail('')
         setPassword('')
-    }
+    };
+    
 
     return (
         <div className='p-7 h-screen flex w-full flex-col justify-between'>
@@ -51,7 +59,10 @@ const CaptainLogin = () => {
                         required 
                         placeholder='email@example.com' 
                         className='bg-gray-700 mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            setError(null)
+                        }}
                     />
                     <h3 className='text-lg font-medium mb-2'>What's your Password</h3>
                     <input 
@@ -60,16 +71,15 @@ const CaptainLogin = () => {
                         value={password}
                         required 
                         placeholder='password'
-                        className='bg-gray-700 mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
-                        onChange={(e) => setPassword(e.target.value)}
+                        className='bg-gray-700 mb-4 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                            setError(null)
+                        }}
                     />
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
-                    <button 
-                        type="submit"
-                        className={`bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        disabled={loading}
-                    >
-                        {loading ? 'Logging in...' : 'Login'}
+                    {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+                    <button className="bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg">
+                        Login
                     </button>
                 </form>
                 <p className='text-center'>Join a fleet? <Link to='/captain-signup' className='text-blue-600'>Register as a Captain</Link></p>

@@ -18,7 +18,7 @@ import 'remixicon/fonts/remixicon.css'
 const App = () => {
   return (
     <div className='bg-gray-200 '>
-      <div className=' w-[375px] flex items-center justify-center bg-gray-800 text-white shadow-md mx-auto rounded-lg'>
+      <div className=' w-[550px] flex items-center justify-center bg-gray-800 text-white shadow-md mx-auto rounded-lg'>
           <Routes>
               <Route path='/' element={<Start/>}/>
               <Route path='/login' element={<UserLogin/>}/>
