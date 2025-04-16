@@ -12,6 +12,7 @@ import { SocketContext } from '../context/SocketContext';
 import { UserDataContext } from '../context/userContext';
 import { useNavigate } from 'react-router-dom';
 import LiveTracking from '../components/LiveTracking';
+import Sidebar from '../components/Sidebar';
 
 const Home = () => {
 
@@ -242,9 +243,14 @@ const Home = () => {
 
   return (
     <div className='h-screen relative w-full mx-auto overflow-y-hidden'>
+        <Sidebar 
+            isOpen={isSidebarOpen} 
+            onClose={() => setIsSidebarOpen(false)} 
+            user={user} 
+        />
         <h2 className='w-16 absolute left-5 top-5 text-2xl tracking-tighter font-bold text-white'>RideEasy</h2>
-        <div className="absolute top-5 right-5 z-50">
-            <button onClick={() => setIsSidebarOpen(true)} className="absolute cursor-pointer bg-white h-10 w-10 flex items-center justify-center rounded-full shadow-md top-5 right-5">
+        <div className="absolute top-2 right-2 z-50">
+            <button onClick={() => setIsSidebarOpen(true)} className="absolute cursor-pointer bg-white h-10 w-10 flex items-center justify-center rounded-full shadow-md top-2 right-2">
                 <i className="text-lg text-black font-bold ri-menu-line"></i>
             </button>
         </div>
