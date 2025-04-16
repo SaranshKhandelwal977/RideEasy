@@ -21,4 +21,23 @@ router.get('/get-fare',
     rideController.getFare
 )
 
+router.post('/confirm', 
+    authMiddleware.authCaptain, 
+    body('rideId').isString().withMessage('Ride ID is required'),
+    rideController.confirmRide
+)
+
+router.get('/start-ride',
+    authMiddleware.authCaptain, 
+    query('rideId').isString().withMessage('Ride ID is required'),
+    query('otp').isString().isLength({min: 6}).withMessage('OTP must be atleast 6 characters long'),
+    rideController.startRide
+)
+
+router.post('/end-ride',
+    authMiddleware.authCaptain, 
+    body('rideId').isString().withMessage('Ride ID is required'),
+    rideController.endRide
+)
+
 module.exports = router

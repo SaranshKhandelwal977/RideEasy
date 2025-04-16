@@ -39,6 +39,7 @@ const CaptainSignup = () => {
             }
         }
         const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`, newCaptain);
+        console.log(response.data)
         if(response.status === 201){
             const data = response.data;
             setCaptain(data.captain);

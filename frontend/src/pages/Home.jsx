@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect  } from 'react'
+import React, { useRef, useState, useEffect, useContext  } from 'react'
 import {useGSAP} from '@gsap/react'
 import gsap from 'gsap';
 import 'remixicon/fonts/remixicon.css'
@@ -8,6 +8,10 @@ import ConfirmRide from '../components/ConfirmRide';
 import WaitForDriver from '../components/WaitForDriver';
 import LookingForDriver from '../components/LookingForDriver';
 import axios from 'axios';
+import { SocketContext } from '../context/SocketContext';
+import { UserDataContext } from '../context/userContext';
+import { useNavigate } from 'react-router-dom';
+import LiveTracking from '../components/LiveTracking';
 
 const Home = () => {
 
@@ -42,9 +46,31 @@ const Home = () => {
     const [finalDestination, setFinalDestination] = useState('');
     const [isEV, setIsEV] = useState(false);
 
+    const {socket} = useContext(SocketContext);
+    const {user} = useContext(UserDataContext);
+
+    const navigate = useNavigate();
+
     const submithandler = (e) => {
         e.preventDefault();
     }
+
+    useEffect(() => {
+        socket.emit('join', {userType: "user", userId: user._id});
+    },[user])
+
+    socket.on('ride-confirmed', ride => {
+        setVehicleFound(false)
+        setRide(ride)
+        setConfirmRidePanel(false)
+        setVehiclePanel(false)
+        setWaitingForDriver(true)
+    })
+
+    socket.on('ride-started', ride => {
+        setWaitingForDriver(false)
+        navigate('/riding', {state: {ride}})
+    })
 
     useEffect(() => {
         const timeout = setTimeout(async () => {
@@ -214,10 +240,10 @@ const Home = () => {
     }
 
   return (
-    <div className='h-screen relative overflow-hidden'>
+    <div className='h-screen relative overflow-y-hidden'>
         <h2 className='w-16 absolute left-5 top-5 text-2xl tracking-tighter font-bold text-black'>RideEasy</h2>
-        <div className='h-4/5'>
-            <img className='w-full h-full object-cover' src='https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif'/>
+        <div className='h-[70%] w-[375px]'>
+            <LiveTracking/>
         </div>
         <div className='absolute flex flex-col justify-end h-screen top-0 w-full'>
             <div className='h-[30%] p-6 bg-gray-800 relative'>
@@ -313,7 +339,12 @@ const Home = () => {
         </div>
 
         <div ref={waitingForDriverRef} className='fixed w-[375px] z-10 bottom-0 bg-gray-800 px-3 py-6 pt-12 transform translate-y-full'>
-            <WaitForDriver setWaitingForDriver={setWaitingForDriver}/>
+            <WaitForDriver 
+                setWaitingForDriver={setWaitingForDriver} 
+                ride={ride}
+                setVehicleFound={setVehicleFound}
+                waitingForDriver={waitingForDriver}
+            />
         </div>
     </div>
   )

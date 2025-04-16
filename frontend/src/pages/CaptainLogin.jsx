@@ -9,35 +9,40 @@ const CaptainLogin = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const { setCaptain } = useContext(CaptainDataContext);
+    const { captain, setCaptain } = useContext(CaptainDataContext);
     const navigate = useNavigate();
 
-    const submitHandler = useCallback(async (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError(null); // Reset error before request
         
-        try {
-            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`, { email, password });
-            
-            if (response.status === 200) {
-                const { captain, token } = response.data;
-                setCaptain(captain);
-                localStorage.setItem('token', token);
-                navigate('/captain-home');
-            }
-        } catch (err) {
-            setError(err.response?.data?.message || 'Login failed! Please try again.');
-        } finally {
-            setLoading(false);
+        const captain = {
+            email: email,
+            password
         }
-    }, [email, password, setCaptain, navigate]);
+    
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`, captain)
+    
+        if (response.status === 200) {
+            const data = response.data
+        
+            setCaptain(data.captain)
+            localStorage.setItem('token', data.token)
+            localStorage.setItem('captain', JSON.stringify(data.captain));
+
+            navigate('/captain-home')
+    
+        }
+        setEmail('')
+        setPassword('')
+    }
 
     return (
         <div className='p-7 h-screen flex w-full flex-col justify-between'>
             <div>
                 <h2 className='w-16 mb-5 text-2xl tracking-tighter font-bold'>RideEasy</h2>
-                <form onSubmit={submitHandler}>
+                <form onSubmit={(e) => submitHandler(e)}>
                     <h3 className='text-lg font-medium mb-2'>What's your Email</h3>
                     <input 
                         type="email" 

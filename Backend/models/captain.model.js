@@ -20,7 +20,7 @@ const captainSchema = new mongoose.Schema({
         required: true,
         unique: true,
         lowercase: true,
-        minlength: [5, 'Last name must be at least 3 characters long'],
+        minlength: [5, 'Email must be at least 5 characters long'],
         match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email address']
     },
     password: {
@@ -63,10 +63,10 @@ const captainSchema = new mongoose.Schema({
         }
     },
     location: {
-        latitude: {
+        ltd: {
             type: Number
         },
-        longitude: {
+        lng: {
             type: Number
         }
     }

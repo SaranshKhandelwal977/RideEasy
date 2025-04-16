@@ -10,9 +10,16 @@ const WaitForDriver = (props) => {
         <div className='flex items-center justify-between'>
              <img className='h-12' src={carImage}/>
              <div className='text-right'>
-                <h2 className='text-lg font-medium'>Saransh</h2>
-                <h4 className='text-xl font-semibold -mt-1 -mb-1'>DL11CC9263</h4>
+                <h2 className='text-lg font-medium'>{props.ride?.captain.fullname.firstname}</h2>
+                <h4 className='text-xl font-semibold -mt-1 -mb-1'>{props.ride?.captain.vehicle.plate}</h4>
                 <p className='text-sm text-gray-400'>Maruti Suzuki WagonR</p>
+                <div className='mt-2'>
+                    <p className='text-xs text-gray-300'>OTP for verification</p>
+                    <div className='mt-1 px-4 py-2 bg-white text-black font-bold text-lg tracking-widest rounded-lg shadow-md inline-block'>
+                        {props.ride?.otp}
+                    </div>
+                </div>
+
              </div>
         </div>
         <div className='flex gap-2 justify-between flex-col items-center'> 
@@ -20,22 +27,19 @@ const WaitForDriver = (props) => {
                 <div className='flex items-center gap-5 p-3 border-b-2 border-gray-400'>
                     <i className="text-lg  ri-map-pin-2-fill"></i>
                     <div>
-                        <h3 className='text-lg font-medium'>562/11A</h3>
-                        <p className='text-sm -mt-1 text-gray-500'>Address line 2</p>
+                        <h3 className='text-md font-medium'>{props.ride?.pickup}</h3>
                     </div>
                 </div>
                 <div className='flex items-center gap-5 p-3 border-b-2 border-gray-400'>
                     <i className="text-lg ri-map-pin-user-fill"></i>
                     <div>
-                        <h3 className='text-lg font-medium'>562/11A</h3>
-                        <p className='text-sm -mt-1 text-gray-500'>Address line 2</p>
+                        <h3 className='text-md font-medium'>{props.ride?.destination}</h3>
                     </div>
                 </div>
                 <div className='flex items-center gap-5 p-3'>
                     <i className="text-lg ri-currency-line"></i>
                     <div>
-                        <h3 className='text-lg font-medium'>Rs. 193.20</h3>
-                        <p className='text-sm -mt-1 text-gray-500'>Currency option</p>
+                        <h3 className='text-md font-medium'>{props.ride?.fare}</h3>
                     </div>
                 </div>
             </div>
