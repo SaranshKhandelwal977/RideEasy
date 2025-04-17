@@ -32,7 +32,7 @@ const Riding = () => {
                 <div className='text-right'>
                     <h2 className='text-lg font-medium'>{ride?.captain.fullname.firstname}</h2>
                     <h4 className='text-xl font-semibold -mt-1 -mb-1'>{ride?.captain.vehicle.plate}</h4>
-                    <p className='text-sm text-gray-400'>Maruti Suzuki WagonR</p>
+                    <p className='text-sm text-gray-400'>{ride?.captain.vehicle.modelName || 'Vehicle'}</p>
                 </div>
             </div>
             <div className='flex gap-2 justify-between flex-col items-center'> 
@@ -47,7 +47,7 @@ const Riding = () => {
                     <div className='flex items-center gap-5 p-3'>
                         <i className="text-lg ri-currency-line"></i>
                         <div>
-                            <h3 className='text-md font-medium'>{ride?.fare}</h3>
+                            <h3 className='text-md font-medium'>₹{ride?.fare}</h3>
                         </div>
                     </div>
                 </div>

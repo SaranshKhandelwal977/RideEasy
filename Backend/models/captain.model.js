@@ -60,6 +60,10 @@ const captainSchema = new mongoose.Schema({
         evMode: {
             type: Boolean,
             default: false
+        },
+        modelName: { 
+            type: String, 
+            required: true
         }
     },
     location: {

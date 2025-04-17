@@ -47,8 +47,12 @@ const rideSchema = new mongoose.Schema({
         select: false,
         required: true
     },
+    createdAt:{
+        type: Date,
+        default: Date.now
+    }
 
-})
+}, { timestamps: true })
 
 const rideModel = mongoose.model('ride', rideSchema);
 module.exports = rideModel;

@@ -27,6 +27,7 @@ module.exports.registerCaptain = async (req, res, next) => {
             plate: vehicle.plate,
             capacity: vehicle.capacity,
             vehicleType: vehicle.vehicleType,
+            modelName: vehicle.modelName,
             evMode: vehicle.evMode || false
         });
 

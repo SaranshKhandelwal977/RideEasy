@@ -103,12 +103,13 @@ module.exports.changePassword = async (req, res) => {
 
 module.exports.getUserRideHistory = async (req, res) => {
     try {
-        const rides = await rideModel.find({ user: req.user._id, status: 'completed' })
-            .populate('captain', 'fullname vehicle') // Get captain's name and vehicle
-            .sort({ createdAt: -1 });
-
-        res.status(200).json(rides);
+      const rides = await rideModel
+        .find({ user: req.user._id, status: 'completed' })
+        .populate('captain', 'fullname vehicle')
+        .sort({ createdAt: -1 });
+  
+      res.status(200).json({ rides });
     } catch (err) {
-        res.status(500).json({ message: 'Error fetching ride history', error: err.message });
+      res.status(500).json({ message: err.message });
     }
-};
+  };

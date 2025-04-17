@@ -15,6 +15,7 @@ const CaptainSignup = () => {
     const [ vehiclePlate, setVehiclePlate ] = useState('')
     const [ vehicleCapacity, setVehicleCapacity ] = useState('')
     const [ vehicleType, setVehicleType ] = useState('')
+    const [vehicleModel, setVehicleModel] = useState('');
     const [isEV, setIsEV] = useState(false);
 
     const {captain, setCaptain} = useContext(CaptainDataContext);
@@ -35,6 +36,7 @@ const CaptainSignup = () => {
                 plate: vehiclePlate,
                 capacity: vehicleCapacity,
                 vehicleType: vehicleType,
+                modelName: vehicleModel,
                 evMode: isEV
             }
         }
@@ -54,6 +56,7 @@ const CaptainSignup = () => {
         setVehiclePlate('')
         setVehicleCapacity('')
         setVehicleType('')
+        setVehicleModel('')
         setIsEV(false);
     }
 
@@ -67,7 +70,7 @@ const CaptainSignup = () => {
         }}>
 
           <h3 className='text-lg w-full  font-medium mb-2'>What's our Captain's name</h3>
-          <div className='flex gap-4 mb-7'>
+          <div className='flex gap-4 mb-4'>
             <input
               required
               className='bg-gray-700 w-1/2 rounded-lg px-4 py-2 border  text-lg placeholder:text-base'
@@ -97,7 +100,7 @@ const CaptainSignup = () => {
             onChange={(e) => {
               setEmail(e.target.value)
             }}
-            className='bg-gray-700 mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
+            className='bg-gray-700 mb-4 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
             type="email"
             placeholder='email@example.com'
           />
@@ -105,7 +108,7 @@ const CaptainSignup = () => {
           <h3 className='text-lg font-medium mb-2'>Enter Password</h3>
 
           <input
-            className='bg-gray-700 mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
+            className='bg-gray-700 mb-4 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
             value={password}
             onChange={(e) => {
               setPassword(e.target.value)
@@ -115,7 +118,7 @@ const CaptainSignup = () => {
           />
 
           <h3 className='text-lg font-medium mb-2'>Vehicle Information</h3>
-          <div className='flex gap-4 mb-7'>
+          <div className='flex gap-4 mb-4'>
             <input
               required
               className='bg-gray-700 w-1/2 rounded-lg px-4 py-2 border text-lg placeholder:text-base'
@@ -137,7 +140,7 @@ const CaptainSignup = () => {
               }}
             />
           </div>
-          <div className='flex gap-4 mb-7'>
+          <div className='flex gap-4 mb-4'>
             <input
               required
               className='bg-gray-700 w-1/2 rounded-lg px-4 py-2 border text-lg placeholder:text-base'
@@ -163,7 +166,18 @@ const CaptainSignup = () => {
             </select>
           </div>
 
-          <div className='flex items-center gap-3 mb-7'>
+          <input
+            required
+            className='bg-gray-700 w-full mb-4 rounded-lg px-4 py-2 border text-lg placeholder:text-base'
+            type="text"
+            placeholder='Vehicle Model Name (e.g. WagonR, Swift, etc)'
+            value={vehicleModel}
+            onChange={(e) => {
+              setVehicleModel(e.target.value);
+            }}
+          />
+
+          <div className='flex items-center gap-3 mb-4'>
             <input
               id="ev-toggle"
               type="checkbox"
