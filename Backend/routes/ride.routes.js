@@ -42,4 +42,11 @@ router.post('/end-ride',
 
 router.post('/rentals/create', authMiddleware.authUser, rideController.createRentalRide);
 
+router.post('/rate-captain',
+    authMiddleware.authUser, 
+    body('rideId').isString().withMessage('Ride ID is required'),
+    body('rating').isNumeric().custom((value) => value >= 1 && value <= 5).withMessage('Rating must be between 1 and 5'),
+    rideController.rateCaptain
+)
+
 module.exports = router

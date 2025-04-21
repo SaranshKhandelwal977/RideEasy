@@ -85,3 +85,22 @@ module.exports.logoutCaptain = async (req, res, next) => {
         next(error);
     }
 };
+module.exports.getCaptainStats = async (req, res, next) => {
+    try {
+        const captainId = req.captain._id; 
+        
+        const captain = await captainModel.findById(captainId).select('noOfRides totalFare status');
+        
+        if (!captain) {
+            return res.status(404).json({ message: 'Captain not found' });
+        }
+
+        res.status(200).json({
+            noOfRides: captain.noOfRides,
+            totalFare: captain.totalFare,
+            status: captain.status
+        });
+    } catch (error) {
+        next(error);
+    }
+};

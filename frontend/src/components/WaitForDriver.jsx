@@ -1,5 +1,7 @@
 import React from 'react'
 import carImage from "../assets/carr.png";
+import bikeImage from "../assets/bike.png";
+import autoImage from "../assets/auto.png";
 
 const WaitForDriver = (props) => {
   return (
@@ -8,11 +10,18 @@ const WaitForDriver = (props) => {
             <i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i>
         </h5>
         <div className='flex items-center justify-between'>
-             <img className='h-12' src={carImage}/>
+             <img className='h-20' src={ props.ride?.captain.vehicle.vehicleType === 'car' ? carImage : props.ride?.captain.vehicle.vehicleType === 'motorcycle' ? bikeImage : autoImage}/>
              <div className='text-right'>
                 <h2 className='text-lg font-medium'>{props.ride?.captain.fullname.firstname}</h2>
                 <h4 className='text-xl font-semibold -mt-1 -mb-1'>{props.ride?.captain.vehicle.plate}</h4>
                 <p className='text-sm text-gray-400'>{props.ride?.captain.vehicle.modelName || 'Vehicle'}</p>
+                {props.ride?.captain?.rating && (
+                    <div className='flex items-center gap-1 mt-1'>
+                        <p className='text-xs text-gray-300 mr-1'>Driver's Rating:</p>
+                        <span className='text-yellow-500'>⭐</span>
+                        <span className='text-sm font-semibold'>{props.ride.captain.rating.toFixed(1)}</span>
+                    </div>
+                )}
                 <div className='mt-2'>
                     <p className='text-xs text-gray-300'>OTP for verification</p>
                     <div className='mt-1 px-4 py-2 bg-white text-black font-bold text-lg tracking-widest rounded-lg shadow-md inline-block'>
@@ -38,7 +47,7 @@ const WaitForDriver = (props) => {
                             <p>
                                 {props.ride?.isRental 
                                     ? `Rental for ${props.ride?.rentalDuration} hour(s)` 
-                                    : `Destination: ${props.ride?.destination}`
+                                    : `${props.ride?.destination}`
                                 }
                             </p>
                         </h3>

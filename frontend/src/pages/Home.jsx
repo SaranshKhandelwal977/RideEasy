@@ -248,7 +248,7 @@ const Home = () => {
             onClose={() => setIsSidebarOpen(false)} 
             user={user} 
         />
-        <h2 className='w-16 absolute left-5 top-5 text-2xl tracking-tighter font-bold text-white'>RideEasy</h2>
+        <h2 className='absolute left-5 top-5 text-2xl tracking-tighter font-bold text-white'>RideEasy</h2>
         <div className="absolute top-2 right-2 z-50">
             <button onClick={() => setIsSidebarOpen(true)} className="absolute cursor-pointer bg-white h-10 w-10 flex items-center justify-center rounded-full shadow-md top-2 right-2">
                 <i className="text-lg text-black font-bold ri-menu-line"></i>
@@ -266,7 +266,7 @@ const Home = () => {
                     <h4 className='text-3xl font-semibold'>Find a trip</h4>
                     <button
                         onClick={() => navigate('/rental')}
-                        className="bg-blue-600 text-white px-4 py-2 mb-2 rounded-lg"
+                        className="bg-blue-600 text-white px-4 py-2 mb-2 rounded-lg mr-10"
                         >
                         If you want to book a Rental cab Click Here
                     </button>

@@ -30,7 +30,7 @@ const ConfirmRide = (props) => {
                             <p>
                                 {props.isRental 
                                     ? `Rental for ${props.rentalDuration} hour(s)` 
-                                    : `Destination: ${props.destination}`
+                                    : `${props.destination}`
                                 }
                             </p>
                         </h3>

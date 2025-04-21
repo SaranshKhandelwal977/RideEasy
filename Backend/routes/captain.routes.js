@@ -12,7 +12,8 @@ router.post('/register', [
     body('vehicle.plate').isLength({min: 1}).withMessage('Plate must be atleast 1 characters long'),
     body('vehicle.capacity').isLength({min: 1}).withMessage('Capacity must be atleast 1 characters long'),
     body('vehicle.vehicleType').isIn(['car', 'motorcycle', 'auto']).withMessage('Invalid vehicle type'),
-    body('vehicle.evMode').optional().isBoolean().withMessage('evMode must be true or false')
+    body('vehicle.evMode').optional().isBoolean().withMessage('evMode must be true or false'),
+    body('vehicle.modelName').isLength({min: 1}).withMessage('ModelName must be atleast 1 characters long')
 ], 
     captainController.registerCaptain
 )
@@ -26,5 +27,6 @@ router.post('/login', [
 
 router.get('/profile', authMiddleware.authCaptain ,captainController.getCaptainProfile)
 router.get('/logout', authMiddleware.authCaptain, captainController.logoutCaptain)
+router.get('/stats', authMiddleware.authCaptain, captainController.getCaptainStats);
 
 module.exports = router;

@@ -5,6 +5,7 @@ const app = express();
 const cors = require('cors');
 const connectToDB = require('./db/db')
 const cookieParser = require('cookie-parser');
+require('./jobs/rideCleanupCron');
 
 const userRoutes = require('./routes/user.routes');
 const captainRoutes = require('./routes/captain.routes');

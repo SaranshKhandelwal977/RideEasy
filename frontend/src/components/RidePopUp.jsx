@@ -29,7 +29,7 @@ const RidePopUp = (props) => {
                             <p>
                                 {props.ride?.isRental 
                                     ? `Rental for ${props.ride?.rentalDuration} hour(s)` 
-                                    : `Destination: ${props.ride?.destination}`
+                                    : `${props.ride?.destination}`
                                 }
                             </p>
 

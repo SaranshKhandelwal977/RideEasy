@@ -142,10 +142,10 @@ return (
     <div className='h-screen relative w-full mx-auto overflow-hidden'>
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} user={user} />
 
-        <h2 className='absolute left-5 top-5 text-2xl font-bold text-white'>RideEasy</h2>
+        <h2 className='absolute left-5 top-5 text-2xl font-bold text-white tracking-tighter'>RideEasy</h2>
 
         <div className='absolute top-2 right-2 z-50'>
-            <button onClick={() => setIsSidebarOpen(true)} className='bg-white h-10 w-10 flex items-center justify-center rounded-full shadow-md'>
+            <button onClick={() => setIsSidebarOpen(true)} className='absolute bg-white h-10 w-10 flex items-center justify-center rounded-full shadow-md top-2 right-2'>
                 <i className='ri-menu-line text-lg text-black font-bold'></i>
             </button>
         </div>
@@ -159,11 +159,11 @@ return (
                 <h5 ref={panelCloseRef} onClick={() => setPanelOpen(false)} className='absolute left-[50%] text-xl font-semibold text-gray-500 cursor-pointer z-100'>
                     <i className='ri-arrow-down-wide-line'></i>
                 </h5>
-                <div className='flex items-center justify-between'>
-                    <h4 className='text-3xl font-semibold mb-10'>Book a Rental</h4>
+                <div className='flex items-center justify-between mb-10'>
+                    <h4 className='text-3xl font-semibold '>Book a Rental</h4>
                     <button
                         onClick={() => navigate('/home')}
-                        className="bg-blue-600 text-white px-4 py-2 mb-2 rounded-lg"
+                        className="bg-blue-600 text-white px-4 py-2 mb-2 rounded-lg mr-10"
                         >
                         If you want to book a normal service Click Here
                     </button>

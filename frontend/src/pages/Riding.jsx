@@ -1,12 +1,13 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Link, useLocation } from 'react-router-dom';
-import { useEffect, useContext } from 'react';
+import {useState, useEffect, useContext } from 'react';
 import { SocketContext } from '../context/SocketContext';
 import LiveTracking from '../components/LiveTracking';
 import carImage from "../assets/carr.png";
 import bikeImage from "../assets/bike.png";
 import autoImage from "../assets/auto.png";
+import axios from 'axios';
 
 const Riding = () => {
     const navigate = useNavigate();
@@ -15,12 +16,77 @@ const Riding = () => {
 
     const {socket} = useContext(SocketContext);
 
-    socket.on('ride-ended', () => {
-        navigate('/home')
-    })
+    const [showRating, setShowRating] = useState(false);
+    const [rating, setRating] = useState(5);
+
+    useEffect(() => {
+        if (!socket) return;
+        const handleRideEnded = () => {
+            console.log('Ride ended event received ');
+            setShowRating(true);
+        };
+
+        socket.on('ride-ended', handleRideEnded);
+        console.log('Socket listener attached');
+
+        return () => {
+            socket.off('ride-ended', handleRideEnded);
+            console.log('Socket listener detached ');
+        };
+    },[socket])
+
+    const submitRating = async () => {
+        try {
+            if (isNaN(rating) || rating < 1 || rating > 5) {
+                console.error('Invalid rating value :', rating);
+                return;
+            }
+    
+            await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/rate-captain`, {
+                rideId: ride._id,
+                rating: rating
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+    
+            console.log('Rating submitted successfully ');
+            navigate('/home');
+        } catch (error) {
+            console.error('Failed to submit rating', error);
+        }
+    };
 
   return (
     <div className='h-screen relative w-full mx-auto'>
+        {showRating && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[6px] bg-black/30">
+                <div className="bg-[#0F172A] border border-white/10 p-8 rounded-xl shadow-lg w-80">
+                <h2 className="text-2xl font-bold text-white mb-4 text-center">Rate Your Captain</h2>
+
+                <select
+                    value={rating}
+                    onChange={(e) => setRating(parseInt(e.target.value))}
+                    className="w-full p-3 rounded-md border border-white/20 bg-[#1E293B] text-white focus:outline-none mb-5"
+                >
+                    <option value={5}>🌟 5 - Excellent</option>
+                    <option value={4}>⭐ 4 - Very Good</option>
+                    <option value={3}>👍 3 - Good</option>
+                    <option value={2}>😐 2 - Bad</option>
+                    <option value={1}>👎 1 - Very Bad</option>
+                </select>
+
+                <button
+                    onClick={submitRating}
+                    className="w-full py-2 rounded-md bg-green-500 hover:bg-green-600 text-white font-semibold transition-all"
+                >
+                    Submit Rating
+                </button>
+                </div>
+            </div>
+        )}
+
         <h2 className='w-16 absolute left-5 top-5 text-2xl tracking-tighter font-bold text-white'>RideEasy</h2>
         <div onClick={() => {navigate('/home')}} className='absolute cursor-pointer bg-white h-10 w-10 flex items-center justify-center rounded-full shadow-md top-5 right-5'>
             <i className="text-lg text-black font-bold ri-home-5-line"></i>
@@ -47,7 +113,7 @@ const Riding = () => {
                                 <p>
                                     {ride?.isRental 
                                         ? `Rental for ${ride?.rentalDuration} hour(s)` 
-                                        : `Destination: ${ride?.destination}`
+                                        : `${ride?.destination}`
                                     }
                                 </p>
                             </h3>

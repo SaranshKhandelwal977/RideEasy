@@ -73,7 +73,21 @@ const captainSchema = new mongoose.Schema({
         lng: {
             type: Number
         }
-    }
+    },
+    totalFare: {
+        type: Number,
+        default: 0
+    },
+    noOfRides: {
+        type: Number,
+        default: 0
+    },
+    rating: {
+        type: Number,
+        min: 1,
+        max: 5,
+        default: 5
+    },
 })
 
 captainSchema.methods.generateAuthToken = function () {
