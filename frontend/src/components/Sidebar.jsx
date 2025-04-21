@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const Sidebar = ({ user, isOpen, onClose }) => {
   return (
     <div
-      className={`absolute top-0 left-0 h-full w-[70%] bg-gray-900 text-white z-50 transform ${
+      className={`absolute top-0 left-0 h-full w-[50%] bg-gray-900 text-white z-50 transform ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       } transition-transform duration-300`}
     >

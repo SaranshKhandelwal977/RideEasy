@@ -3,7 +3,6 @@ const mapsService = require('./maps.service');
 const crypto = require('crypto');
 const {sendMessageToSocketId} = require('../socket');
 
-
 async function getFare(pickup, destination, isEV = false) {
     if(!pickup || !destination) {
         throw new Error('Pickup and destination are required');
@@ -106,31 +105,56 @@ module.exports.startRide = async ({rideId, otp, captain}) => {
     return ride;
 }
 
-module.exports.endRide = async ({rideId, captain}) => {
-    if(!rideId) {
-        throw new Error('RideId is required');
+module.exports.endRide = async ({ rideId, captain }) => {
+    const ride = await rideModel.findOne({ _id: rideId, captain: captain._id }).populate('user').populate('captain');
+  
+    if (!ride) throw new Error('Ride not found');
+    if (ride.status !== 'ongoing') throw new Error('Ride not ongoing');
+  
+    let updatedFare = ride.fare;
+  
+    if (ride.isRental) {
+      const rentalEnd = new Date();
+      const rentalStart = ride.rentalStartTime || ride.updatedAt; // fallback
+      const actualDurationInMin = Math.ceil((rentalEnd - rentalStart) / 60000);
+      const allowedDuration = ride.rentalDuration * 60;
+  
+      if (actualDurationInMin > allowedDuration) {
+        const extraMinutes = actualDurationInMin - allowedDuration;
+        const perMinuteRate = 3; // You can customize this
+        updatedFare += extraMinutes * perMinuteRate;
+      }
+  
+      ride.actualEndTime = rentalEnd;
     }
-    const ride = await rideModel.findOne(
-        {
-            _id: rideId,
-            captain: captain._id
-        }
-    ).populate('user').populate('captain').select('+otp');
-    if(!ride) {
-        throw new Error('Ride not found');
-    }
-    if(ride.status !== 'ongoing') {
-        throw new Error('Ride not ongoing yet');
-    }
-    await rideModel.findOneAndUpdate(
-        {_id: rideId},
-        {
-            status: 'completed',
-        }
-    )
+  
+    ride.status = 'completed';
+    ride.fare = updatedFare;
+    await ride.save();
+  
     sendMessageToSocketId(ride.user.socketId, {
-        event: 'ride-completed',
-        data: ride
+      event: 'ride-completed',
+      data: ride
     });
+  
     return ride;
-}
+};
+  
+module.exports.createRentalRide = async ({ userId, pickup, rentalDuration, fare }) => {
+    if (!userId || !pickup || !rentalDuration || !fare) {
+      throw new Error('All fields are required for rental ride');
+    }
+  
+    const ride = await rideModel.create({
+      user: userId,
+      pickup,
+      fare,
+      rentalDuration,
+      isRental: true,
+      otp: crypto.randomInt(100000, 999999).toString(),
+      status: 'pending'
+    });
+  
+    return ride;
+  };
+  

@@ -40,4 +40,6 @@ router.post('/end-ride',
     rideController.endRide
 )
 
+router.post('/rentals/create', authMiddleware.authUser, rideController.createRentalRide);
+
 module.exports = router

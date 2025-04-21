@@ -44,7 +44,7 @@ const CaptainRiding = () => {
             <h4 className='text-xl font-semibold'>4km away </h4>
             <button onClick={() => {}} className='bg-green-600 text-white font-semibold p-2 px-5 rounded-lg '>Complete Ride</button>
         </div>
-        <div ref={finishRidePanelRef} className='fixed w-[550px] h-screen z-10 bottom-0 bg-gray-800 px-3 py-10 pt-12 transform translate-y-full'>
+        <div ref={finishRidePanelRef} className='fixed w-screen h-screen z-10 bottom-0 bg-gray-800 px-3 py-10 pt-12 transform translate-y-full'>
             <FinishRide ride={rideData} setFinishRidePanel={setFinishRidePanel}/>
         </div>
     </div>

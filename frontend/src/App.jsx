@@ -16,11 +16,12 @@ import CaptainRiding from './pages/CaptainRiding'
 import 'remixicon/fonts/remixicon.css'
 import UserProfile from './pages/UserProfile'
 import RideHistory from './pages/RideHistory';
+import RentalBooking from './pages/RentalBooking'
 
 const App = () => {
   return (
     <div className='bg-gray-200 '>
-      <div className=' w-[550px] flex items-center justify-center bg-gray-800 text-white shadow-md mx-auto rounded-lg'>
+      <div className=' w-screen flex items-center justify-center bg-gray-800 text-white shadow-md mx-auto rounded-lg'>
           <Routes>
               <Route path='/' element={<Start/>}/>
               <Route path='/login' element={<UserLogin/>}/>
@@ -32,6 +33,7 @@ const App = () => {
               <Route path='/profile' element={<UserProtectWrapper><UserProfile /></UserProtectWrapper>} />
               <Route path='/ride-history' element={<UserProtectWrapper><RideHistory /></UserProtectWrapper>} />
               <Route path='/user/logout' element={<UserProtectWrapper><UserLogout/></UserProtectWrapper> }/>
+              <Route path='/rental' element={<UserProtectWrapper><RentalBooking/></UserProtectWrapper>} />
               <Route path='/captain-home' element={<CaptainProtectWrapper><CaptainHome/></CaptainProtectWrapper> }/>
               <Route path='/captain/logout' element={<CaptainProtectWrapper><CaptainLogout/></CaptainProtectWrapper> }/>
               <Route path='/captain-riding' element={<CaptainProtectWrapper><CaptainRiding/></CaptainProtectWrapper> }/>

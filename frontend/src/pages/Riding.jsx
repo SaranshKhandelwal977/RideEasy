@@ -1,10 +1,12 @@
 import React from 'react'
-import carImage from "../assets/carr.png";
 import { useNavigate } from 'react-router-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useContext } from 'react';
 import { SocketContext } from '../context/SocketContext';
 import LiveTracking from '../components/LiveTracking';
+import carImage from "../assets/carr.png";
+import bikeImage from "../assets/bike.png";
+import autoImage from "../assets/auto.png";
 
 const Riding = () => {
     const navigate = useNavigate();
@@ -28,7 +30,7 @@ const Riding = () => {
         </div>
         <div className='h-1/2 p-4'>
             <div className='flex items-center justify-between'>
-                <img className='h-12' src={carImage}/>
+                <img className='h-20' src={ ride?.captain.vehicle.vehicleType === 'car' ? carImage : ride?.captain.vehicle.vehicleType === 'motorcycle' ? bikeImage : autoImage}/>
                 <div className='text-right'>
                     <h2 className='text-lg font-medium'>{ride?.captain.fullname.firstname}</h2>
                     <h4 className='text-xl font-semibold -mt-1 -mb-1'>{ride?.captain.vehicle.plate}</h4>
@@ -41,7 +43,14 @@ const Riding = () => {
                     <div className='flex items-center gap-5 p-3 border-b-2 border-gray-400'>
                         <i className="text-lg ri-map-pin-user-fill"></i>
                         <div>
-                            <h3 className='text-md font-medium'>{ride?.destination}</h3>
+                            <h3 className='text-md font-medium'>
+                                <p>
+                                    {ride?.isRental 
+                                        ? `Rental for ${ride?.rentalDuration} hour(s)` 
+                                        : `Destination: ${ride?.destination}`
+                                    }
+                                </p>
+                            </h3>
                         </div>
                     </div>
                     <div className='flex items-center gap-5 p-3'>

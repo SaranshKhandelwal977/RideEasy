@@ -259,10 +259,19 @@ const Home = () => {
         </div>
         <div className='absolute flex flex-col justify-end h-screen top-0 w-full'>
             <div className='h-[30%] p-6 bg-gray-800 relative'>
-                <h5 ref={panelCloseRef} onClick={() => setPanelOpen(false)} className='absolute right-6 top-6 text-xl font-semibold text-gray-500 cursor-pointer'>
+                <h5 ref={panelCloseRef} onClick={() => setPanelOpen(false)} className='absolute left-[50%] text-xl font-semibold text-gray-500 cursor-pointer z-100'>
                     <i className="ri-arrow-down-wide-line"></i>
                 </h5>
-                <h4 className='text-3xl font-semibold'>Find a trip</h4>
+                <div className='flex items-center justify-between'>
+                    <h4 className='text-3xl font-semibold'>Find a trip</h4>
+                    <button
+                        onClick={() => navigate('/rental')}
+                        className="bg-blue-600 text-white px-4 py-2 mb-2 rounded-lg"
+                        >
+                        If you want to book a Rental cab Click Here
+                    </button>
+
+                </div>
                 <form onSubmit={(e) => submithandler(e)}>
                     <div className='flex gap-5 justify-center items-center mt-5 bg-gray-700 px-5 py-2 rounded-lg'>
                         <i className="ri-record-circle-fill"></i>
@@ -296,11 +305,16 @@ const Home = () => {
             </div>
 
             <div ref={panelRef} className=' bg-gray-800 h-0'>
-                <button
-                    onClick={findTrip}
-                    className='bg-black text-white px-4 py-2 mb-5 rounded-lg -mt-5 w-full'>
-                    Find Trip
-                </button>
+            <button
+                disabled={!pickup || !destination}
+                onClick={findTrip}
+                className={`bg-black text-white px-4 py-2 mb-5 rounded-lg -mt-5 w-full ${
+                    (!pickup || !destination) && 'opacity-50 cursor-not-allowed'
+                }`}
+            >
+                Find Trip
+            </button>
+            
                 <LocationSearchPanel 
                     suggestions={activeField === 'pickup' ? pickupSuggestions : destinationSuggestions}
                     setPanelOpen={setPanelOpen}
@@ -311,7 +325,7 @@ const Home = () => {
                 />
             </div>
         </div>
-        <div ref={vehiclePanelRef} className='fixed w-[550px] z-10 bottom-0 bg-gray-800 px-3 py-10 pt-12 transform translate-y-full'>
+        <div ref={vehiclePanelRef} className='fixed w-screen z-10 bottom-0 bg-gray-800 px-3 py-10 pt-12 transform translate-y-full'>
             <VehiclePanel  
                 selectVehicle={setVehicleType} 
                 fare={fare} 
@@ -325,7 +339,7 @@ const Home = () => {
             />
         </div>
 
-        <div ref={confirmRidePanelRef} className='fixed w-[550px] z-10 bottom-0 bg-gray-800 px-3 py-6 pt-12 transform translate-y-full'>
+        <div ref={confirmRidePanelRef} className='fixed w-screen z-10 bottom-0 bg-gray-800 px-3 py-6 pt-12 transform translate-y-full'>
             <ConfirmRide 
                 createRide={createRide}
                 pickup={finalPickup}
@@ -338,7 +352,7 @@ const Home = () => {
             />
         </div>
 
-        <div ref={vehicleFoundRef} className='fixed w-[550px] z-10 bottom-0 bg-gray-800 px-3 py-6 pt-12 transform translate-y-full'>
+        <div ref={vehicleFoundRef} className='fixed w-screen z-10 bottom-0 bg-gray-800 px-3 py-6 pt-12 transform translate-y-full'>
             <LookingForDriver 
                 createRide={createRide}
                 pickup={finalPickup}
@@ -350,7 +364,7 @@ const Home = () => {
             />
         </div>
 
-        <div ref={waitingForDriverRef} className='fixed w-[550px] z-10 bottom-0 bg-gray-800 px-3 py-6 pt-12 transform translate-y-full'>
+        <div ref={waitingForDriverRef} className='fixed w-screen z-10 bottom-0 bg-gray-800 px-3 py-6 pt-12 transform translate-y-full'>
             <WaitForDriver 
                 setWaitingForDriver={setWaitingForDriver} 
                 ride={ride}

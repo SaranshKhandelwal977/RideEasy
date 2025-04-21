@@ -14,12 +14,14 @@ module.exports.createRide = async (req, res) => {
         const ride = await rideService.createRide({user:req.user._id , pickup, destination, vehicleType, isEV });
         res.status(201).json({ride});
         const pickupCoordinates = await mapsService.getAddressCoordinates(pickup);
-        console.log(pickupCoordinates)
         const captainsInRadius = await mapsService.getCaptainsInTheRadius(pickupCoordinates.ltd, pickupCoordinates.lng , 5); // Assuming 5 km radius
-        console.log(captainsInRadius)
+        const filteredCaptains = captainsInRadius.filter(captain => 
+            captain.vehicle.vehicleType === vehicleType && 
+            captain.vehicle.evMode === isEV
+        );
         ride.otp="";
         const rideWithUser = await rideModel.findOne({_id: ride._id}).populate('user');
-        captainsInRadius.map(captain => {
+        filteredCaptains.forEach(captain => {
             sendMessageToSocketId(captain.socketId, {
                 event: 'new-ride',
                 data: rideWithUser
@@ -99,3 +101,45 @@ module.exports.endRide = async (req, res) => {
         return res.status(500).json({message: error.message});
     }
 }
+
+module.exports.createRentalRide = async (req, res) => {
+    try {
+      const { pickup, rentalDuration, fare } = req.body;
+  
+      if (!pickup || !rentalDuration || !fare) {
+        return res.status(400).json({ message: 'Missing rental details' });
+      }
+  
+      const ride = await rideService.createRentalRide({
+        userId: req.user._id,
+        pickup,
+        rentalDuration,
+        fare
+      });
+  
+      const pickupCoordinates = await mapsService.getAddressCoordinates(pickup);
+      const captains = await mapsService.getCaptainsInTheRadius(
+        pickupCoordinates.ltd,
+        pickupCoordinates.lng,
+        5
+      );
+  
+      const rideWithUser = await rideModel.findById(ride._id).populate('user');
+  
+      captains
+        .filter(cap => cap.vehicle.vehicleType === 'car')
+        .forEach(cap => {
+          sendMessageToSocketId(cap.socketId, {
+            event: 'new-ride',
+            data: rideWithUser
+          });
+        });
+  
+      res.status(201).json(ride);
+    } catch (error) {
+      console.error('Rental Ride Error:', error.message);
+      res.status(500).json({ message: error.message });
+    }
+  };
+  
+  

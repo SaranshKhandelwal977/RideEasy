@@ -16,7 +16,9 @@ const rideSchema = new mongoose.Schema({
     },
     destination:{
         type: String,
-        required: true
+        required: function () {
+            return !this.isRental; 
+        }
     },
     fare:{
         type: Number,
@@ -50,6 +52,19 @@ const rideSchema = new mongoose.Schema({
     createdAt:{
         type: Date,
         default: Date.now
+    },
+    isRental: {
+        type: Boolean,
+        default: false
+    },
+    rentalDuration: {
+        type: Number // in hours
+    },
+    rentalStartTime: {
+        type: Date
+    },
+    actualEndTime: {
+        type: Date
     }
 
 }, { timestamps: true })

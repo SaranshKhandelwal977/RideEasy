@@ -55,7 +55,16 @@ const RideHistory = () => {
               {ride.createdAt ? format(new Date(ride.createdAt), 'dd MMM yyyy - hh:mm a') : 'Date not available'}
             </p>
             <p className="text-lg font-semibold mb-1">Pickup: <span className="font-normal">{ride.pickup}</span></p>
-            <p className="text-lg font-semibold mb-1">Destination: <span className="font-normal">{ride.destination}</span></p>
+
+            <p className="text-lg font-semibold mb-1">
+                {ride.isRental 
+                    ? 'Rental Duration:' 
+                    : 'Destination:'} <span className="font-normal">
+                    {ride.isRental
+                    ? `${ride.rentalDuration} hour(s)` 
+                    : ride.destination}
+                </span>
+            </p>
             <p className="text-md text-green-400 font-semibold">Fare: ₹{ride.fare}</p>
             <p className="text-sm">Vehicle Type: {ride.captain?.vehicle?.vehicleType}</p>
             <p className="text-sm">EV Mode: {ride.captain?.vehicle?.evMode ? 'Yes ⚡' : 'No'}</p>

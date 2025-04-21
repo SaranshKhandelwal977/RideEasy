@@ -26,7 +26,14 @@ const ConfirmRide = (props) => {
                 <div className='flex items-center gap-5 p-3 border-b-2 border-gray-400'>
                     <i className="text-md ri-map-pin-user-fill"></i>
                     <div>
-                        <h3 className='text-md font-normal'>{props.destination}</h3>
+                        <h3 className='text-md font-normal'>
+                            <p>
+                                {props.isRental 
+                                    ? `Rental for ${props.rentalDuration} hour(s)` 
+                                    : `Destination: ${props.destination}`
+                                }
+                            </p>
+                        </h3>
                     </div>
                 </div>
                 <div className='flex items-center gap-5 p-3'>
