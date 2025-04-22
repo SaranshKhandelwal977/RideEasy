@@ -19,6 +19,11 @@ const Riding = () => {
     const [showRating, setShowRating] = useState(false);
     const [rating, setRating] = useState(5);
 
+    const [showPaymentOptions, setShowPaymentOptions] = useState(false);
+    const [splitCount, setSplitCount] = useState(1);
+    const [splitError, setSplitError] = useState('');
+    const [isSplitActive, setIsSplitActive] = useState(false);
+
     useEffect(() => {
         if (!socket) return;
         const handleRideEnded = () => {
@@ -127,7 +132,92 @@ const Riding = () => {
                     </div>
                 </div>
             </div>
-            <button className='w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg '>Make a Payment</button>
+            <button 
+                className='w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg '
+                onClick={() => setShowPaymentOptions(true)}
+            >
+                Make a Payment
+            </button>
+            {showPaymentOptions && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30">
+                <div className="bg-[#0F172A] border border-white/10 p-6 rounded-xl shadow-lg w-[90%] max-w-md text-white">
+                    <h2 className="text-lg font-bold text-center mb-4">Select Payment Method</h2>
+                    <div className="space-y-3">
+                        <button
+                            onClick={() => {
+                                socket.emit('payment-mode', { rideId: ride._id, mode: 'cash' });
+                                setShowPaymentOptions(false);
+                                console.log("Payment mode emitted");
+                            }}
+                            className="w-full py-2 rounded-md bg-yellow-500 hover:bg-yellow-600 text-black font-semibold transition-all"
+                            >
+                            Pay in Cash 💵
+                        </button>
+                        <button
+                            onClick={() => {
+                                setIsSplitActive(true);
+                            }}
+                            className="w-full py-2 rounded-md bg-purple-500 hover:bg-purple-600 text-white font-semibold transition-all"
+                            >
+                            Split the Fare 🧾
+                        </button>
+                        {isSplitActive && (
+                            <div className="flex flex-col gap-2 mt-3">
+                                <input
+                                type="number"
+                                min={1}
+                                max={5}
+                                placeholder="Split among how many people? (max 5)"
+                                className="bg-gray-700 text-white rounded-md p-2 w-[70%] inline-block"
+                                value={splitCount}
+                                onChange={(e) => {
+                                    const value = parseInt(e.target.value);
+                                    if (value > 5) {
+                                    setSplitError('You can split the fare among max 5 people.');
+                                    } else {
+                                    setSplitError('');
+                                    setSplitCount(value);
+                                    }
+                                }}
+                                />
+                                {splitError && <p className="text-red-400 text-sm">{splitError}</p>}
+                                {splitCount > 1 && (
+                                <p className="text-green-300 text-sm">
+                                    Each person pays ₹{(ride.fare / splitCount).toFixed(2)}
+                                </p>
+                                )}
+                                {splitCount > 1 && !splitError && (
+                                <button
+                                    onClick={() => {
+                                    socket.emit('payment-mode', {
+                                        rideId: ride._id,
+                                        mode: 'cash-split',
+                                        splitCount,
+                                    });
+                                    setShowPaymentOptions(false);
+                                    setIsSplitActive(false);
+                                    }}
+                                    className="bg-yellow-600 hover:bg-yellow-700 text-white py-2 rounded-md"
+                                >
+                                    Confirm Split Payment
+                                </button>
+                                )}
+                            </div>
+                        )}
+                        <button
+                        className="w-full py-2 rounded-md bg-green-600 hover:bg-green-700 text-white font-semibold"
+                        onClick={() => {
+                            alert('Online payment coming soon via Razorpay.');
+                            setShowPaymentOptions(false);
+                        }}
+                        >
+                        Pay Online 💳
+                        </button>
+                    </div>
+                </div>
+            </div>
+            )}
+
         </div>
     </div>
   )

@@ -32,6 +32,24 @@ function initializeSocket(server) {
             console.log(`Captain: ${userId} updated location`);
             await captainModel.findByIdAndUpdate(userId, {location: {ltd: location.ltd, lng: location.lng}});
         })
+        socket.on('payment-mode', async ({ rideId, mode, splitCount }) => {
+            try {
+                const ride = await require('./models/ride.model').findById(rideId).populate('captain');
+                const captainSocketId = ride?.captain?.socketId;
+                if (captainSocketId) {
+                    io.to(captainSocketId).emit('payment-mode', {
+                        rideId,
+                        mode,
+                        splitCount
+                    });
+                    console.log(`Forwarded payment-mode to captain ${captainSocketId}`);
+                } else {
+                    console.log('Captain socketId not found.');
+                }
+            } catch (err) {
+                console.error('Error in payment-mode event:', err.message);
+            }
+        });
         socket.on('disconnect', () => {
             console.log(`Client disconnected: ${socket.id}`);
         });

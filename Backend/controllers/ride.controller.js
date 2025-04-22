@@ -74,6 +74,9 @@ module.exports.startRide = async (req, res) => {
     const {rideId, otp} = req.query;
     try{
         const ride = await rideService.startRide({rideId, otp, captain: req.captain});
+        await captainModel.findByIdAndUpdate(req.captain._id, {
+            status: 'inactive'
+        });
         sendMessageToSocketId(ride.user.socketId, {
             event: 'ride-started',
             data: ride
@@ -84,7 +87,6 @@ module.exports.startRide = async (req, res) => {
     }
 }
 
-
 module.exports.endRide = async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
@@ -93,6 +95,9 @@ module.exports.endRide = async (req, res) => {
     const {rideId} = req.body;
     try{
         const ride = await rideService.endRide({rideId, captain: req.captain});
+        await captainModel.findByIdAndUpdate(req.captain._id, {
+            status: 'active'
+        });
         sendMessageToSocketId(ride.user.socketId, {
             event: 'ride-ended',
             data: ride

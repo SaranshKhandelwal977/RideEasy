@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
+import { SocketContext } from '../context/SocketContext';
 
 const FinishRide = (props) => {
     const navigate = useNavigate()
+    const [paymentInfo, setPaymentInfo] = useState(null);
+    const { socket } = useContext(SocketContext);
+
     const endRide = async () => {
         const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/end-ride`, {
             rideId: props.ride._id
@@ -16,6 +20,25 @@ const FinishRide = (props) => {
             navigate('/captain-home')
         }
     }
+    console.log("Socket in FinishRide:", socket);
+    useEffect(() => {
+        if (!socket || !props.ride?._id) return;
+      
+        const handlePaymentMode = (data) => {
+          console.log("Received payment mode:", data);
+          if (data.rideId === props.ride._id) {
+            setPaymentInfo(data);
+          }
+        };
+      
+        socket.on('payment-mode', handlePaymentMode);
+      
+        return () => {
+          socket.off('payment-mode', handlePaymentMode);
+        };
+      }, [socket, props.ride?._id]);
+      
+      
     
   return (
     <div>
@@ -59,8 +82,35 @@ const FinishRide = (props) => {
                 </div>
             </div>
             <div className="mt-6 w-full">
-                <button onClick={endRide} className=' mt-5 block text-center w-full bg-green-600 text-white font-semibold p-2 px-5 rounded-lg '>Finish Ride</button>
-                <p className='text-red-500 mt-6 text-xs'>Click on finish ride button if you have completed the payment.</p>
+                {paymentInfo && (
+                    <div className="mt-4 p-3 text-sm text-green-500 rounded-md">
+                        {paymentInfo.mode === 'cash' && (
+                        <>
+                            <p>Passenger will pay in cash.</p>
+                            <p>You can now finish the ride.</p>
+                        </>
+                        )}
+                        {paymentInfo.mode === 'cash-split' && (
+                        <>
+                            <p>Fare will be split among <strong>{paymentInfo.splitCount}</strong> people.
+                            Passengers will pay in cash.</p> <p>You can now finish the ride.</p>
+                        </>
+                        )}
+                    </div>
+                )}
+                <button 
+                    onClick={endRide} 
+                    disabled={!paymentInfo} 
+                    className={`mt-5 block text-center w-full font-semibold p-2 px-5 rounded-lg transition-all ${!paymentInfo ? 'bg-gray-500 text-gray-300 cursor-not-allowed' : 'bg-green-600 text-white hover:bg-green-700'}`}
+                >
+                    Finish Ride
+                </button>
+                {
+                    !paymentInfo && (
+                        <p className='text-red-500 mt-6 text-xs'>Click on finish ride button if you have completed the payment.</p>
+
+                    )
+                }
             </div>
 
         </div>
