@@ -2,6 +2,7 @@ const rideModel = require('../models/ride.model');
 const mapsService = require('./maps.service');
 const crypto = require('crypto');
 const {sendMessageToSocketId} = require('../socket');
+const captainModel = require('../models/captain.model');
 
 async function getFare(pickup, destination, isEV = false) {
     if(!pickup || !destination) {
@@ -61,11 +62,14 @@ module.exports.confirmRide = async ({rideId, captain}) => {
         throw new Error('RideId is required');
     }
     await rideModel.findOneAndUpdate(
-        {_id: rideId},
+        {_id: rideId, status: 'pending'},
         {
-            status: 'accepted',
-            captain: captain._id
-        }
+            $set:{
+                status: 'accepted',
+                captain: captain._id
+            }
+        },
+        {new: true}
     )
     const ride = await rideModel.findOne(
         {_id: rideId}
@@ -73,6 +77,7 @@ module.exports.confirmRide = async ({rideId, captain}) => {
     if(!ride) {
         throw new Error('Ride not found');
     }
+    await captainModel.findByIdAndUpdate(captain._id, { status: 'inactive' });
     return ride;
 }
 

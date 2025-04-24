@@ -59,20 +59,21 @@ const Home = () => {
 
     useEffect(() => {
         socket.emit('join', {userType: "user", userId: user._id});
-    },[user])
+        socket.on('ride-confirmed', ride => {
+            console.log("Ride confirmed socket received:", ride);
+            setVehicleFound(false)
+            setRide(ride)
+            setConfirmRidePanel(false)
+            setVehiclePanel(false)
+            setWaitingForDriver(true)
+        })
+    
+        socket.on('ride-started', ride => {
+            setWaitingForDriver(false)
+            navigate('/riding', {state: {ride}})
+        })
+    },[user, socket])
 
-    socket.on('ride-confirmed', ride => {
-        setVehicleFound(false)
-        setRide(ride)
-        setConfirmRidePanel(false)
-        setVehiclePanel(false)
-        setWaitingForDriver(true)
-    })
-
-    socket.on('ride-started', ride => {
-        setWaitingForDriver(false)
-        navigate('/riding', {state: {ride}})
-    })
 
     useEffect(() => {
         const timeout = setTimeout(async () => {

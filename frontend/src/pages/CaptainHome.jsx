@@ -18,6 +18,8 @@ const CaptainHome = () => {
     const [confirmRidePopupPanel, setConfirmRidePopupPanel] = useState(false);
     const confirmRidePopupPanelRef = useRef(null);
 
+    const [rideQueue, setRideQueue] = useState([]);
+
     const {socket} = useContext(SocketContext);
     const {captain} = useContext(CaptainDataContext);
 
@@ -39,28 +41,89 @@ const CaptainHome = () => {
             }
         }
         const locationInterval = setInterval(updateLocation, 10000);
-        updateLocation(); // Call it immediately to get the location right away
-        // return () => clearInterval(locationInterval);
+        updateLocation(); 
 
-    },[captain])
-
-    socket.on('new-ride', (data) => {
-        console.log(data)
-        setRide(data);
-        setRidePopupPanel(true);
-    })
-
-    const confirmRide = async () => {
-        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/confirm`, {
-            rideId: ride._id,
-            captainId: captain._id
-        }, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
+        socket.on('new-ride', (data) => {
+            console.log('New ride received:', data);
+            setRideQueue((prevQueue) => {
+                if (prevQueue.find(r => r._id === data._id)) return prevQueue;
+                return [...prevQueue, data];
+            });
+    
+            if (!ride) {
+                setRide(data);
+                setRidePopupPanel(true);
             }
         })
-        setRidePopupPanel(false);
-        setConfirmRidePopupPanel(true);
+    
+        socket.on('ride-cancelled', ({ rideId }) => {
+            setRideQueue(prev => prev.filter(r => r._id !== rideId));
+            if (ride && ride._id === rideId) {
+                setRide(null);
+                setRidePopupPanel(false);
+        
+                // Show next ride in queue if available
+                setTimeout(() => {
+                    setRideQueue((q) => {
+                        if (q.length > 0) {
+                            setRide(q[0]);
+                            setRidePopupPanel(true);
+                            return q.slice(1);
+                        }
+                        return q;
+                    });
+                }, 500);
+            }
+        });
+    },[captain, socket, ride])
+
+    const ignoreRide = () => {
+        setRideQueue((prevQueue) => {
+          const newQueue = prevQueue.filter(r => r._id !== ride._id); 
+          const nextRide = newQueue[0] || null;
+          
+          if (nextRide) {
+            setRide(nextRide);
+            setRidePopupPanel(true); 
+          } else {
+            setRide(null);
+            setRidePopupPanel(false);
+          }
+      
+          return newQueue;
+        });
+      };
+      
+    
+
+    const confirmRide = async () => {
+        try{
+            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/confirm`, {
+                rideId: ride._id,
+                captainId: captain._id
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+            console.log('Ride confirmed:', response);
+            setRidePopupPanel(false);
+            setConfirmRidePopupPanel(true);
+        }
+        catch(err){
+            console.log('Ride already taken by someone else.: ', err);
+            setRidePopupPanel(false);
+            setTimeout(() => {
+                setRideQueue((q) => {
+                    if (q.length > 0) {
+                        setRide(q[0]);
+                        setRidePopupPanel(true);
+                        return q.slice(1);
+                    }
+                    return q;
+                });
+            }, 500);
+        }
     }
 
     useGSAP(function(){
@@ -109,6 +172,7 @@ const CaptainHome = () => {
                 setConfirmRidePopupPanel={setConfirmRidePopupPanel}
                 ride={ride}
                 confirmRide={confirmRide}
+                ignoreRide={ignoreRide}
             />
         </div>
         <div ref={confirmRidePopupPanelRef} className='fixed w-screen h-screen z-10 bottom-0 bg-gray-800 px-3 py-10 pt-12 transform translate-y-full'>

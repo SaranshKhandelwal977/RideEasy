@@ -56,9 +56,19 @@ module.exports.confirmRide = async (req, res) => {
     const {rideId} = req.body;
     try{
         const ride = await rideService.confirmRide({rideId, captain: req.captain});
+        console.log(ride)
         sendMessageToSocketId(ride.user.socketId, {
             event: 'ride-confirmed',
             data: ride
+        });
+        const allCaptains = await captainModel.find({ status: 'active' });
+        allCaptains.forEach(cap => {
+            if (cap._id.toString() !== req.captain._id.toString()) {
+                sendMessageToSocketId(cap.socketId, {
+                    event: 'ride-cancelled',
+                    data: { rideId }
+                });
+            }
         });
         return res.status(200).json(ride);
     }catch(error){
