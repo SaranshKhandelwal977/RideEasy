@@ -11,7 +11,7 @@ module.exports.registerUser = async (req, res) => {
         return res.status(400).json({ message: 'Validation error', errors: errors.array() })
     }
 
-    const { fullname, email, password } = req.body
+    const { fullname, email, password, phone } = req.body
     const existingUser = await userModel.findOne({ email })
     
     if (existingUser) {
@@ -23,7 +23,8 @@ module.exports.registerUser = async (req, res) => {
         firstname: fullname.firstname,
         lastname: fullname.lastname,
         email,
-        password: hashedPassword
+        password: hashedPassword,
+        phone
     })
 
     const token = user.generateAuthToken()
@@ -70,11 +71,12 @@ module.exports.updateUserProfile = async (req, res) => {
 
         if (!user) return res.status(404).json({ message: 'User not found' });
 
-        const { firstname, lastname, email } = req.body;
+        const { firstname, lastname, email, phone } = req.body;
 
         if (firstname) user.fullname.firstname = firstname;
         if (lastname) user.fullname.lastname = lastname;
         if (email) user.email = email;
+        if (phone) user.phone = phone;
 
         await user.save();
         res.status(200).json({ message: 'Profile updated successfully', user });

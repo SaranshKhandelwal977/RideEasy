@@ -10,6 +10,7 @@ const UserProfile = () => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const [phone, setPhone] = useState('');
 
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -22,6 +23,7 @@ const UserProfile = () => {
             setFirstname(user.fullname.firstname);
             setLastname(user.fullname.lastname || '');
             setEmail(user.email);
+            setPhone(user.phone);
         }
     }, [user]);
 
@@ -31,7 +33,8 @@ const UserProfile = () => {
             const response = await axios.put(`${import.meta.env.VITE_BASE_URL}/users/update-profile`, {
                 firstname,
                 lastname,
-                email
+                email,
+                phone
             }, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -93,6 +96,13 @@ const UserProfile = () => {
                     className='w-full p-2 rounded bg-gray-700 text-white'
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    placeholder='Email'
+                />
+                <input
+                    type='text'
+                    className='w-full p-2 rounded bg-gray-700 text-white'
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                     placeholder='Email'
                 />
                 <button type='submit' className='w-full bg-blue-600 text-white p-2 rounded'>Update Profile</button>

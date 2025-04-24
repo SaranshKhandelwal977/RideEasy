@@ -30,7 +30,13 @@ const userSchema = new mongoose.Schema({
     },
     socketId: {
         type: String
-    }
+    },
+    phone: {
+        type: String,
+        unique: true,
+        sparse: true,
+        required: true,
+    },
 });
 
 userSchema.methods.generateAuthToken = function () {

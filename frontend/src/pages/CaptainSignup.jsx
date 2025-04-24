@@ -10,6 +10,7 @@ const CaptainSignup = () => {
     const [ firstName, setFirstName ] = useState('')
     const [ lastName, setLastName ] = useState('')
     const [ captainData, setCaptainData ] = useState({})
+    const [phone, setPhone] = useState('')
 
     const [ vehicleColor, setVehicleColor ] = useState('')
     const [ vehiclePlate, setVehiclePlate ] = useState('')
@@ -31,6 +32,7 @@ const CaptainSignup = () => {
             },
             email: email,
             password: password,
+            phone: phone,
             vehicle: {
                 color: vehicleColor,
                 plate: vehiclePlate,
@@ -57,11 +59,12 @@ const CaptainSignup = () => {
         setVehicleCapacity('')
         setVehicleType('')
         setVehicleModel('')
+        setPhone('')
         setIsEV(false);
     }
 
   return (
-    <div className='py-5 px-5 h-screen flex flex-col justify-between'>
+    <div className='py-5 px-5 h-full flex flex-col justify-between w-full'>
       <div>
         <h2 className='w-16 mb-5 text-2xl tracking-tighter font-bold'>RideEasy</h2>
 
@@ -115,6 +118,18 @@ const CaptainSignup = () => {
             }}
             required type="password"
             placeholder='password'
+          />
+
+          <h3 className='text-lg font-medium mb-2'>What's our Captain's Contact Number</h3>
+          <input
+            required
+            value={phone}
+            onChange={(e) => {
+              setPhone(e.target.value)
+            }}
+            className='bg-gray-700 mb-4 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
+            type="text"
+            placeholder='9876543219'
           />
 
           <h3 className='text-lg font-medium mb-2'>Vehicle Information</h3>
@@ -197,10 +212,7 @@ const CaptainSignup = () => {
         </form>
         <p className='text-center'>Already have a account? <Link to='/captain-login' className='text-blue-600'>Login here</Link></p>
       </div>
-      <div>
-        <p className='text-[10px] mt-6 leading-tight'>This site is protected by reCAPTCHA and the <span className='underline'>Google Privacy
-          Policy</span> and <span className='underline'>Terms of Service apply</span>.</p>
-      </div>
+      
     </div>
   )
 }
