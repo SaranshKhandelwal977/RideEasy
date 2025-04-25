@@ -47,9 +47,9 @@ const FinishRide = (props) => {
         </h5>
         <h3 className='text-2xl font-semibold mb-5'>Finish this ride</h3>
         <div className='flex items-center justify-between p-3 bg-gray-600 rounded-lg'>
-            <div className='flex items-center gap-5 justify-between'>
-                <img className='h-12 w-12 rounded-full object-cover border-1 bg-amber-400' src=''/>
-                <h2 className='text-lg font-medium -ml-3'>{props.ride?.user.fullname.firstname}</h2>
+            <div className='flex flex-col justify-between'>
+                <h2 className='text-lg font-medium'>{props.ride?.user.fullname.firstname}</h2>
+                <h2 className='text-sm'>{props.ride?.user.phone}</h2>
             </div>
             <h5 className='text-lg font-medium'>2.2 KM</h5>
         </div>

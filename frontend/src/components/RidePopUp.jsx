@@ -1,6 +1,7 @@
 import React from 'react'
 
 const RidePopUp = (props) => {
+    console.log(props.ride)
   return (
     <div>
         <h5 className='p-1 text-center w-[93%] absolute top-0 ' onClick={() => {props.setRidePopupPanel(false)}}>
@@ -8,9 +9,9 @@ const RidePopUp = (props) => {
         </h5>
         <h3 className='text-2xl font-semibold mb-5'>New Ride Available</h3>
         <div className='flex items-center justify-between p-3 bg-gray-600 rounded-lg'>
-            <div className='flex items-center gap-5 justify-between'>
-                <img className='h-12 w-12 rounded-full object-cover border-1 bg-amber-400' src=''/>
-                <h2 className='text-lg font-medium -ml-3'>{props.ride?.user.fullname.firstname} {props.ride?.user.fullname.lastname}</h2>
+            <div className='flex flex-col justify-between'>
+                <h2 className='text-lg font-medium'>{props.ride?.user.fullname.firstname}</h2>
+                <h2 className='text-sm'>{props.ride?.user.phone}</h2>
             </div>
             <h5 className='text-lg font-medium'>2.2 KM</h5>
         </div>

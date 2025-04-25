@@ -15,6 +15,7 @@ const WaitForDriver = (props) => {
                 <h2 className='text-lg font-medium'>{props.ride?.captain.fullname.firstname}</h2>
                 <h4 className='text-xl font-semibold -mt-1 -mb-1'>{props.ride?.captain.vehicle.plate}</h4>
                 <p className='text-sm text-gray-400'>{props.ride?.captain.vehicle.modelName || 'Vehicle'}</p>
+                <p className='text-gray-200'>{props.ride?.captain.phone}</p>
                 {props.ride?.captain?.rating && (
                     <div className='flex items-center gap-1 mt-1'>
                         <p className='text-xs text-gray-300 mr-1'>Driver's Rating:</p>

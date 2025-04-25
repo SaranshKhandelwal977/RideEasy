@@ -21,7 +21,7 @@ module.exports.createRide = async (req, res) => {
             captain.vehicle.evMode === isEV
         );
         ride.otp="";
-        const rideWithUser = await rideModel.findOne({_id: ride._id}).populate('user');
+        const rideWithUser = await rideModel.findOne({_id: ride._id}).populate('user').select('+phone');
         filteredCaptains.forEach(captain => {
             sendMessageToSocketId(captain.socketId, {
                 event: 'new-ride',

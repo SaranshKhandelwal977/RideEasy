@@ -106,6 +106,7 @@ const Riding = () => {
                     <h2 className='text-lg font-medium'>{ride?.captain.fullname.firstname}</h2>
                     <h4 className='text-xl font-semibold -mt-1 -mb-1'>{ride?.captain.vehicle.plate}</h4>
                     <p className='text-sm text-gray-400'>{ride?.captain.vehicle.modelName || 'Vehicle'}</p>
+                    <p className='text-gray-200'>{ride?.captain.phone}</p>
                 </div>
             </div>
             <div className='flex gap-2 justify-between flex-col items-center'> 
