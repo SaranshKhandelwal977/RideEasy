@@ -10,9 +10,9 @@ module.exports.createRide = async (req, res) => {
     if(!errors.isEmpty()) {
         return res.status(400).json({errors: errors.array()});
     }
-    const {pickup, destination, vehicleType, isEV  = false} = req.body;
+    const {pickup, destination, vehicleType, isEV  = false, selectedRoute} = req.body;
     try{
-        const ride = await rideService.createRide({user:req.user._id , pickup, destination, vehicleType, isEV });
+        const ride = await rideService.createRide({user:req.user._id , pickup, destination, vehicleType, isEV, selectedRoute });
         res.status(201).json({ride});
         const pickupCoordinates = await mapsService.getAddressCoordinates(pickup);
         const captainsInRadius = await mapsService.getCaptainsInTheRadius(pickupCoordinates.ltd, pickupCoordinates.lng , 5); // Assuming 5 km radius
@@ -36,17 +36,20 @@ module.exports.createRide = async (req, res) => {
 
 module.exports.getFare = async (req, res) => {
     const errors = validationResult(req);
-    if(!errors.isEmpty()) {
-        return res.status(400).json({errors: errors.array()});
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
     }
-    const {pickup, destination, isEV  = false} = req.query;
-    try{
-        const fare = await rideService.getFare(pickup, destination, isEV  === 'true');
+    
+    const { pickup, destination, isEV = false } = req.query;
+  
+    try {
+        const fare = await rideService.getFare(pickup, destination, isEV === 'true');
         return res.status(200).json(fare);
-    }catch(error){
-        return res.status(500).json({message: error.message});
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: error.message });
     }
-}
+};
 
 module.exports.confirmRide = async (req, res) => {
     const errors = validationResult(req);

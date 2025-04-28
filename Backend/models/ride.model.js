@@ -65,7 +65,11 @@ const rideSchema = new mongoose.Schema({
     },
     actualEndTime: {
         type: Date
-    }
+    },
+    selectedRoute: { 
+        type: Object,
+        default: null
+    },
 
 }, { timestamps: true })
 

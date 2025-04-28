@@ -15,6 +15,9 @@ const LookingForDriver = (props) => {
         <div className='flex gap-2 justify-between flex-col items-center'> 
             <img className='h-20' src={ props.vehicleType === 'car' ? carImage : props.vehicleType === 'motorcycle' ? bikeImage : autoImage}/>
             <div className='w-full mt-5'>
+            {!props.isRental && props.routes?.length > 1 && 
+                <h3>Route Chosen: {`${props?.routes[props.selectedRouteIndex]?.summary}`}</h3>
+            }
                 <div className='flex items-center gap-5 p-3 border-b-2 border-gray-400'>
                     <i className="text-lg  ri-map-pin-2-fill"></i>
                     <div>
@@ -37,7 +40,12 @@ const LookingForDriver = (props) => {
                 <div className='flex items-center gap-5 p-3'>
                     <i className="text-lg ri-currency-line"></i>
                     <div>
-                        <h3 className='text-md font-normal'>₹{props.fare[props.vehicleType]}</h3>
+                        <h3 className='text-md font-normal'>
+                            ₹{props.routes && props.routes.length > 0 
+                                ? props.routes[props.selectedRouteIndex]?.fare?.[props.vehicleType] 
+                                : props.fare?.[props.vehicleType]
+                            }
+                        </h3>
                     </div>
                 </div>
             </div>

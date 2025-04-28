@@ -81,3 +81,22 @@ module.exports.getCaptainsInTheRadius = async (ltd, lng, radius) => {
     });
     return captains;
 }
+
+module.exports.getMultipleRoutes = async (origin, destination) => {
+    if (!origin || !destination) {
+        throw new Error('Origin and destination are required');
+    }
+    const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+    const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&alternatives=true&key=${apiKey}`;
+    
+    try {
+        const response = await axios.get(url);
+        if (response.data.status !== 'OK') {
+            throw new Error('Unable to fetch directions');
+        }
+        return response.data.routes;
+    } catch (error) {
+        console.error('Error fetching directions:', error);
+        throw new Error('Failed to fetch directions');
+    }
+  };

@@ -47,6 +47,8 @@ const Home = () => {
     const [finalDestination, setFinalDestination] = useState('');
     const [isEV, setIsEV] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [routes, setRoutes] = useState([]);
+    const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
 
     const {socket} = useContext(SocketContext);
     const {user} = useContext(UserDataContext);
@@ -206,7 +208,11 @@ const Home = () => {
                     Authorization: `bearer ${localStorage.getItem('token')}`
                 }
             });
-            setFare(response.data);
+            console.log(response.data);
+    
+            setRoutes(response.data.multipleRoutes);   
+            setSelectedRouteIndex(0);                 
+            setFare(response.data.multipleRoutes[0]?.fare);
         } catch (error) {
             console.log(error);
         }
@@ -225,13 +231,15 @@ const Home = () => {
         setDestinationSuggestions([]);
     }
    
-
-    async function createRide() {
+    
+    async function createRide(selectedRoute) {
+        console.log(selectedRoute);
         const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`, {
             pickup: finalPickup,
             destination: finalDestination,
             vehicleType,
-            isEV
+            isEV,
+            selectedRoute,
         }, {
             headers: {
                 Authorization: `bearer ${localStorage.getItem('token')}`
@@ -240,6 +248,15 @@ const Home = () => {
         console.log(response);
         setVehiclePanel(false)
         setIsEV(false);
+    }
+
+    function updateFareBasedOnRoute(index) {
+        if (routes && routes.length > 0) {
+            const selected = routes[index];
+            if (selected?.fare) {
+                setFare(selected.fare);  // 🛠️ Update fare from route
+            }
+        }
     }
 
   return (
@@ -350,6 +367,10 @@ const Home = () => {
                 setConfirmRidePanel={setConfirmRidePanel} 
                 setVehicleFound={setVehicleFound}
                 isEV={isEV}
+                routes={routes}
+                selectedRouteIndex={selectedRouteIndex}
+                setSelectedRouteIndex={setSelectedRouteIndex}
+                updateFareBasedOnRoute={updateFareBasedOnRoute}
             />
         </div>
 
@@ -361,7 +382,9 @@ const Home = () => {
                 fare={fare}
                 vehicleType={vehicleType}
                 setVehicleFound={setVehicleFound}  
-                setVehiclePanel={setVehiclePanel}  
+                setVehiclePanel={setVehiclePanel} 
+                routes={routes}
+                selectedRouteIndex={selectedRouteIndex} 
             />
         </div>
 

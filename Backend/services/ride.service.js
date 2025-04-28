@@ -4,34 +4,65 @@ const crypto = require('crypto');
 const {sendMessageToSocketId} = require('../socket');
 const captainModel = require('../models/captain.model');
 
+const baseFare = {
+    auto: 20,
+    car: 35,
+    motorcycle: 10
+};
+const perKmRate = {
+    auto: 8,
+    car: 12,
+    motorcycle: 5
+};
+const perMinuteRate = {
+    auto: 1.5,
+    car: 2.5,
+    motorcycle: 1
+};
+const evDiscount = 0.85;
+
 async function getFare(pickup, destination, isEV = false) {
-    if(!pickup || !destination) {
+    if (!pickup || !destination) {
         throw new Error('Pickup and destination are required');
     }
-    const distanceTime = await mapsService.getDistanceTime(pickup, destination);
-    const baseFare = {
-        auto: 20,
-        car: 35,
-        motorcycle: 10
+  
+    const routes = await mapsService.getMultipleRoutes(pickup, destination);
+  
+    if (!routes.length) {
+        throw new Error('No routes found');
     }
-    const perKmRate = {
-        auto: 8,
-        car: 12,
-        motorcycle: 5
+  
+    const formatRoute = (route) => {
+        const distanceInKm = route.legs[0].distance.value / 1000;
+        const durationInMinutes = route.legs[0].duration.value / 60;
+        const tolls = route.legs[0].toll || 0; // Google doesn't directly give tolls. You may need to manually handle.
+  
+        const calculateFare = (type) => {
+            return Math.round(
+            (baseFare[type] + (distanceInKm * perKmRate[type]) + (durationInMinutes * perMinuteRate[type])) 
+            * (isEV ? evDiscount : 1)
+            );
+        };
+  
+        return {
+            summary: route.summary || "Route",
+            distance: distanceInKm.toFixed(2),
+            duration: durationInMinutes.toFixed(0),
+            fare: {
+                auto: calculateFare('auto'),
+                car: calculateFare('car'),
+                motorcycle: calculateFare('motorcycle')
+            },
+            taxes: tolls || 0,
+            overviewPolyline: route.overview_polyline.points,
+        };
+    };
+  
+    if (routes.length === 1) {
+        return { singleRoute: formatRoute(routes[0]) };
+    } else {
+        return { multipleRoutes: routes.slice(0, 2).map(formatRoute) };
     }
-    const perMinuteRate = {
-        auto: 1.5,
-        car: 2.5,
-        motorcycle: 1
-    }
-    const evDiscount = 0.85;
-    const fare = {
-        auto: Math.round(baseFare.auto + ((distanceTime.distance.value / 1000) * perKmRate.auto) + ((distanceTime.duration.value / 60) * perMinuteRate.auto) * (isEV ? evDiscount : 1)) ,
-        car: Math.round(baseFare.car + ((distanceTime.distance.value / 1000) * perKmRate.car) + ((distanceTime.duration.value / 60) * perMinuteRate.car) * (isEV ? evDiscount : 1)) ,
-        motorcycle: Math.round(baseFare.motorcycle + ((distanceTime.distance.value / 1000) * perKmRate.motorcycle) + ((distanceTime.duration.value / 60) * perMinuteRate.motorcycle) * (isEV ? evDiscount : 1)) 
-       
-    }
-    return fare;
 }
 
 module.exports.getFare = getFare;
@@ -41,17 +72,17 @@ async function getOtp(num){
     return otp;
 }
 
-module.exports.createRide = async ({user, pickup, destination, vehicleType, isEV = false}) => {
-    if(!user || !pickup || !destination || !vehicleType) {
+module.exports.createRide = async ({ user, pickup, destination, vehicleType, isEV = false, selectedRoute }) => {
+    if (!user || !pickup || !destination || !vehicleType) {
         throw new Error('UserId, pickup, destination and vehicleType are required');
     }
-    const fare = await getFare(pickup, destination, isEV);
     const ride = await rideModel.create({
         user: user,
         pickup,
         destination,
         otp: await getOtp(6),
-        fare: fare[vehicleType],
+        fare: selectedRoute.fare[vehicleType],
+        selectedRoute: selectedRoute || null
     });
 
     return ride;
