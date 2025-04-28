@@ -136,21 +136,21 @@ npm run dev
 
 ## 5. Usage
 
-# Book a Ride
+### Book a Ride
 - Select pickup and destination locations.
 - Choose a vehicle type, EV switch and preferred route if multiple routes are shown.
 - Confirm the ride and wait for a captain to accept.
 
-# Track and Complete Ride
+### Track and Complete Ride
 - Track captain's arrival in real-time.
 - Verify ride using OTP.
 - Pay either by cash, split cash among friends, or use Razorpay to pay online.
 
-# Manage Profile and History
+### Manage Profile and History
 - View and edit profile details via sidebar options.
 - Check ride history and previous trips easily.
 
-# Use the AI Chatbot
+### Use the AI Chatbot
 - Ask common queries like:
   - How to book a ride?
   - How to update my profile?
@@ -162,25 +162,25 @@ npm run dev
 
 ## 6. Live Demo
 
-# 🚀 Coming Soon...
-# (Frontend to be deployed on Vercel, Backend on Render)
+### 🚀 Coming Soon...
+### (Frontend to be deployed on Vercel, Backend on Render)
 
 ---
 
 ## 7. Contributing
 
-# Contributions are welcome!
+### Contributions are welcome!
 
-# Fork the repository
+### Fork the repository
 git clone https://github.com/your-username/rideeasy.git
 
-# Create a new branch
+### Create a new branch
 git checkout -b feature-name
 
-# Commit your changes
+### Commit your changes
 git commit -m "Add: feature-name"
 
-# Push to the branch
+### Push to the branch
 git push origin feature-name
 
-# Submit a pull request
+### Submit a pull request
