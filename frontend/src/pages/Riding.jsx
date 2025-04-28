@@ -63,6 +63,46 @@ const Riding = () => {
         }
     };
 
+    async function handleOnlinePayment(amount) {
+        try {
+            const { data } = await axios.post(`${import.meta.env.VITE_BASE_URL}/payment/razorpay/order`, {
+                amount,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            const options = {
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID, // Razorpay Key ID (public)
+                amount: amount * 100, // Amount in paise
+                currency: "INR",
+                name: "RideEasy",
+                description: "Ride Payment",
+                order_id: data.orderId,
+                handler: function (response) {
+                    console.log('Payment Successful', response);
+                    alert("Payment Successful!");
+                    // you can call your backend to mark ride as "paid" ✅
+                },
+                prefill: {
+                    name: "RideEasy User",
+                    email: "user@example.com",
+                    contact: "9876543210",
+                },
+                theme: {
+                    color: "#0F172A",
+                },
+            };
+
+            const razorpayInstance = new window.Razorpay(options);
+            razorpayInstance.open();
+        } catch (err) {
+            console.error("Payment initiation error", err);
+        }
+    }
+
+
   return (
     <div className='h-screen relative w-full mx-auto'>
         {showRating && (
@@ -208,8 +248,9 @@ const Riding = () => {
                         <button
                         className="w-full py-2 rounded-md bg-green-600 hover:bg-green-700 text-white font-semibold"
                         onClick={() => {
-                            alert('Online payment coming soon via Razorpay.');
+                            handleOnlinePayment(ride.fare);
                             setShowPaymentOptions(false);
+                            socket.emit('payment-mode', { rideId: ride._id, mode: 'online' });
                         }}
                         >
                         Pay Online 💳
