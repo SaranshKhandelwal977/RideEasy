@@ -162,8 +162,7 @@ npm run dev
 
 ## 6. Live Demo
 
-### 🚀 Coming Soon...
-### (Frontend to be deployed on Vercel, Backend on Render)
+Check out the live demo of the EdTech Project [here](https://rideeasy.vercel.app/).
 
 ---
 
