@@ -96,7 +96,7 @@ const FinishRide = (props) => {
                             Passengers will pay in cash.</p> <p>You can now finish the ride.</p>
                         </>
                         )}
-                        {paymentInfo.mode === 'cash-split' && (
+                        {paymentInfo.mode === 'online' && (
                         <>
                             <p>Passenger has paid online.</p>
                             <p>You can now finish the ride.</p>

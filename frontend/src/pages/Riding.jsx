@@ -8,11 +8,13 @@ import carImage from "../assets/carr.png";
 import bikeImage from "../assets/bike.png";
 import autoImage from "../assets/auto.png";
 import axios from 'axios';
+import { UserDataContext } from '../context/userContext';
 
 const Riding = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const {ride} = location.state || {};
+    const {user} = useContext(UserDataContext);
 
     const {socket} = useContext(SocketContext);
 
@@ -82,12 +84,12 @@ const Riding = () => {
                 order_id: data.orderId,
                 handler: function (response) {
                     console.log('Payment Successful', response);
-                    alert("Payment Successful!");
-                    // you can call your backend to mark ride as "paid" ✅
+                    socket.emit('payment-mode', { rideId: ride._id, mode: 'online' });
+                    setShowPaymentOptions(false);
                 },
                 prefill: {
-                    name: "RideEasy User",
-                    email: "user@example.com",
+                    name: user.fullname,
+                    email: user.email,
                     contact: "9876543210",
                 },
                 theme: {
@@ -249,8 +251,6 @@ const Riding = () => {
                         className="w-full py-2 rounded-md bg-green-600 hover:bg-green-700 text-white font-semibold"
                         onClick={() => {
                             handleOnlinePayment(ride.fare);
-                            setShowPaymentOptions(false);
-                            socket.emit('payment-mode', { rideId: ride._id, mode: 'online' });
                         }}
                         >
                         Pay Online 💳
