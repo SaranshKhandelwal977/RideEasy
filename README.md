@@ -1,4 +1,4 @@
-# 🚖 RideEasy - Real-Time Ride Hailing App (MERN Stack)
+# 🚖 RideEasy - Real-Time Ride Booking App (MERN Stack)
 
 Welcome to RideEasy — a full-stack MERN (MongoDB, Express.js, React.js, Node.js) based ride-hailing application inspired by Uber. RideEasy enables users to book rides, track captains in real-time, make payments, and manage their rides efficiently.
 
@@ -172,15 +172,19 @@ npm run dev
 ### Contributions are welcome!
 
 ### Fork the repository
+```bash
 git clone https://github.com/your-username/rideeasy.git
-
+```
 ### Create a new branch
+```bash
 git checkout -b feature-name
-
+```
 ### Commit your changes
+```bash
 git commit -m "Add: feature-name"
-
+```
 ### Push to the branch
+```bash
 git push origin feature-name
-
+```
 ### Submit a pull request
