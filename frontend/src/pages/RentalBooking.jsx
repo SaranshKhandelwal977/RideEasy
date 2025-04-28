@@ -4,7 +4,7 @@ import gsap from 'gsap';
 import LiveTracking from '../components/LiveTracking';
 import RentalVehiclePanel from '../components/RentalVehiclePanel';
 import Sidebar from '../components/Sidebar';
-import { UserDataContext } from '../context/userContext';
+import { UserDataContext } from '../context/UserContext';
 import { SocketContext } from '../context/SocketContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';

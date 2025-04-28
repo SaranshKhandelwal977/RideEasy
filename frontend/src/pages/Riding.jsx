@@ -8,7 +8,7 @@ import carImage from "../assets/carr.png";
 import bikeImage from "../assets/bike.png";
 import autoImage from "../assets/auto.png";
 import axios from 'axios';
-import { UserDataContext } from '../context/userContext';
+import { UserDataContext } from '../context/UserContext';
 import ChatBot from '../components/ChatBot';
 
 const Riding = () => {
