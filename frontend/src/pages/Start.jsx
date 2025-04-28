@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 const Start = () => {
   return (
     <div>
-        <div className='h-screen pt-8 flex justify-between flex-col bg-cover bg-center bg-no-repeat w-[375px]' style={{ backgroundImage: `url(${bgImage})` }}>
+        <div className='h-screen pt-8 flex justify-between flex-col bg-cover bg-center bg-no-repeat w-screen' style={{ backgroundImage: `url(${bgImage})` }}>
             <h2 className='w-16 ml-8 text-2xl tracking-tighter font-bold text-black'>RideEasy</h2>
             <div className='bg-white p-5 pb-7'>
                 <h2 className='text-2xl font-bold'>Get Started with RideEasy</h2>

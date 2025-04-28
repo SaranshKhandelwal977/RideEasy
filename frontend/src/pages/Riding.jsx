@@ -9,6 +9,7 @@ import bikeImage from "../assets/bike.png";
 import autoImage from "../assets/auto.png";
 import axios from 'axios';
 import { UserDataContext } from '../context/userContext';
+import ChatBot from '../components/ChatBot';
 
 const Riding = () => {
     const navigate = useNavigate();
@@ -261,6 +262,7 @@ const Riding = () => {
             )}
 
         </div>
+        <ChatBot/>
     </div>
   )
 }

@@ -13,6 +13,7 @@ import { UserDataContext } from '../context/userContext';
 import { useNavigate } from 'react-router-dom';
 import LiveTracking from '../components/LiveTracking';
 import Sidebar from '../components/Sidebar';
+import ChatBot from '../components/ChatBot';
 
 const Home = () => {
 
@@ -396,6 +397,7 @@ const Home = () => {
                 waitingForDriver={waitingForDriver}
             />
         </div>
+        <ChatBot/>
     </div>
   )
 }

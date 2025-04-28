@@ -12,6 +12,8 @@ import LocationSearchPanel from '../components/LocationSearchPanel';
 import LookingForDriver from '../components/LookingForDriver';
 import WaitForDriver from '../components/WaitForDriver';
 import ConfirmRide from '../components/ConfirmRide';
+import ChatBot from '../components/ChatBot';
+
 
 const RentalBooking = () => {
     const [pickup, setPickup] = useState('');
@@ -251,6 +253,7 @@ return (
                 waitingForDriver={waitingForDriver}
             />
         </div>
+        <ChatBot />
     </div>
   );
 };
