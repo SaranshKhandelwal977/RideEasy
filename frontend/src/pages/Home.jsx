@@ -395,6 +395,8 @@ const Home = () => {
                 ride={ride}
                 setVehicleFound={setVehicleFound}
                 waitingForDriver={waitingForDriver}
+                routes={routes}
+                selectedRouteIndex={selectedRouteIndex} 
             />
         </div>
         <ChatBot/>

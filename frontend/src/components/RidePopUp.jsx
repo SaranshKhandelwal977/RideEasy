@@ -15,6 +15,14 @@ const RidePopUp = (props) => {
             </div>
             <h5 className='text-lg font-medium'>2.2 KM</h5>
         </div>
+        {props.ride?.selectedRoute && (
+        <div className="mt-3 bg-gray-800 p-3 rounded-lg text-sm">
+            <h4 className="text-gray-300 mb-2 font-semibold">User selected route:</h4>
+            <p><strong>Path:</strong> {props.ride?.selectedRoute.summary}</p>
+            <p><strong>Distance:</strong> {props.ride?.selectedRoute.distance} km</p>
+            <p><strong>Duration:</strong> {props.ride?.selectedRoute.duration} mins</p>
+        </div>
+        )}
         <div className='flex gap-2 justify-between flex-col items-center'> 
             <div className='w-full mt-5'>
                 <div className='flex items-center gap-5 p-3 border-b-2 border-gray-400'>
