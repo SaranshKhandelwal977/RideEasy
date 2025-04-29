@@ -203,21 +203,28 @@ const Home = () => {
 
     const fetchFare = async (pickup, destination, isEV) => {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
-                params: { pickup, destination, isEV },
-                headers: {
-                    Authorization: `bearer ${localStorage.getItem('token')}`
-                }
-            });
-            console.log(response.data);
-    
-            setRoutes(response.data.multipleRoutes);   
-            setSelectedRouteIndex(0);                 
-            setFare(response.data.multipleRoutes[0]?.fare);
+          const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
+            params: { pickup, destination, isEV },
+            headers: {
+              Authorization: `bearer ${localStorage.getItem('token')}`,
+            },
+          });
+      
+          const data = response.data;
+      
+          if (data.multipleRoutes) {
+            setRoutes(data.multipleRoutes);
+            setSelectedRouteIndex(0);
+            setFare(data.multipleRoutes[0].fare);
+          } else if (data.singleRoute) {
+            setRoutes([data.singleRoute]); 
+            setSelectedRouteIndex(0);
+            setFare(data.singleRoute.fare);
+          }
         } catch (error) {
-            console.log(error);
+          console.error(error);
         }
-    };
+      };
       
     async function findTrip() {
         setVehiclePanel(true);
@@ -234,22 +241,20 @@ const Home = () => {
    
     
     async function createRide(selectedRoute) {
-        console.log(selectedRoute);
         const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`, {
-            pickup: finalPickup,
-            destination: finalDestination,
-            vehicleType,
-            isEV,
-            selectedRoute,
+          pickup: finalPickup,
+          destination: finalDestination,
+          vehicleType,
+          isEV,
+          selectedRoute: routes[selectedRouteIndex],
         }, {
-            headers: {
-                Authorization: `bearer ${localStorage.getItem('token')}`
-            }
-        })
-        console.log(response);
-        setVehiclePanel(false)
+          headers: {
+            Authorization: `bearer ${localStorage.getItem('token')}`
+          }
+        });
+        setVehiclePanel(false);
         setIsEV(false);
-    }
+      }
 
     function updateFareBasedOnRoute(index) {
         if (routes && routes.length > 0) {

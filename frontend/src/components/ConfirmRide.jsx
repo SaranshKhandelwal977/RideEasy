@@ -75,8 +75,8 @@ const ConfirmRide = (props) => {
             props.setVehicleFound(true);
             props.setConfirmRidePanel(false);
             props.isRental 
-              ? props.createRide() 
-              : props.createRide(props.routes[props.selectedRouteIndex]); 
+              ? props.createRide() : props.routes.length > 1
+              ? props.createRide(props.routes[props.selectedRouteIndex]) : props.createRide(props.routes[0]); 
           }}
           className='w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg '
         >
